@@ -15,7 +15,7 @@ from utils.utilities import to_np, to_torch
 
 
 def evaluate(data_generator, data_type, max_audio_num, task_type, model, cuda, loss_type, 
-        threshold, submissions_dir=None, frames_per_1s=100, sub_frames_per_1s=50, FUSION=False, epoch_num=None):
+        threshold, data_dir, submissions_dir=None, frames_per_1s=100, sub_frames_per_1s=50, FUSION=False, epoch_num=None):
     '''
     Evaluate metrics for cross validation or test data
 
@@ -116,7 +116,10 @@ def evaluate(data_generator, data_type, max_audio_num, task_type, model, cuda, l
         output_events= interp_tensor(output['events'].squeeze(), frames_per_1s, sub_frames_per_1s)
         output_doas = interp_tensor(output['doas'].squeeze(), frames_per_1s, sub_frames_per_1s)
         gt_events= interp_tensor(batch_y_dict['events'], frames_per_1s, sub_frames_per_1s)
-        #################################################################################################
+        #output_events= output['events'].squeeze()
+        #output_doas = output['doas'].squeeze()
+        #gt_events= batch_y_dict['events']
+        ###########################################################################################  ######
 
         ################## Write probability and ground_truth to csv file for fusion ####################
         if FUSION and task_type == 'sed_only':
@@ -173,7 +176,7 @@ def evaluate(data_generator, data_type, max_audio_num, task_type, model, cuda, l
     doa_pred = np.concatenate(doa_pred, axis=0)
 
     ###################### SED and DOA metrics, for submission method evaluation ######################
-    gt_meta_dir = '/vol/vssp/AP_datasets/audio/dcase2019/task3/dataset_root/dev/metadata_dev/'
+    gt_meta_dir = os.path.join(data_dir, 'dev', 'metadata_dev')
     sed_scores, doa_er_metric, seld_metric = calculate_SELD_metrics(gt_meta_dir, submissions_dir, score_type='all')
     ###################################################################################################
 

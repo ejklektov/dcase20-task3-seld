@@ -17,7 +17,7 @@ from utilities import calculate_scalar, event_labels, lb_to_ix
 
 fs = 32000
 nfft = 1024
-hopsize = 320 # 640 for 20 ms
+hopsize = 3200 # 3200 for 100 ms
 mel_bins = 128
 window = 'hann'
 fmin = 50
@@ -441,31 +441,69 @@ def extract_dev_features(args):
             '''(channels, time, frequency)'''               
 
             meta_fn = fn + '.csv'
-            df = pd.read_csv(os.path.join(meta_dir, meta_fn))
+            #df = pd.read_csv(os.path.join(meta_dir, meta_fn))
+            #
+            #target_event = df['sound_event_recording'].values
+            #target_start_time = df['start_time'].values
+            #target_end_time = df['end_time'].values
+            #target_ele = df['ele'].values
+            #target_azi = df['azi'].values
+            #target_dist = df['dist'].values
+            #
+            #hdf5_path = os.path.join(hdf5_dir, fn + '.h5')
+            #with h5py.File(hdf5_path, 'w') as hf:
+            #    
+            #    hf.create_dataset('feature', data=feature, dtype=np.float32)
+            #    # hf.create_dataset('filename', data=[na.encode() for na in [fn]], dtype='S20')
+            #
+            #    hf.create_group('target')
+            #    hf['target'].create_dataset('event', data=[e.encode() for e in target_event], dtype='S20')
+            #    hf['target'].create_dataset('start_time', data=target_start_time, dtype=np.float32)
+            #    hf['target'].create_dataset('end_time', data=target_end_time, dtype=np.float32)
+            #    hf['target'].create_dataset('elevation', data=target_ele, dtype=np.float32)
+            #    hf['target'].create_dataset('azimuth', data=target_azi, dtype=np.float32)
+            #    hf['target'].create_dataset('distance', data=target_dist, dtype=np.float32)    
+            #
+            #tqdm.write('{}, {}, {}'.format(audio_count, hdf5_path, feature.shape))
+            
+            
+            #with open(os.path.join(meta_dir, meta_fn)) as csvfile :
+            #    reader = csv.reader(csvfile, delimiter=' ')
+            #    for row in reader :
+            #        target_frame = row[0]
+            #        target_event = row[1]
+            #        target_track_idx = row[2]
+            #        target_azimuth = row[3]
+            #        target_elevation = row[4]
+            df = pd.read_csv(os.path.join(meta_dir, meta_fn), index_col=False, header=None)
 
-            target_event = df['sound_event_recording'].values
-            target_start_time = df['start_time'].values
-            target_end_time = df['end_time'].values
-            target_ele = df['ele'].values
-            target_azi = df['azi'].values
-            target_dist = df['dist'].values
+            #pdb.set_trace()
 
+            target_frame = df[0].values
+            target_event = df[1].values
+            target_track_idx = df[2].values
+            target_azi = df[3].values
+            target_ele = df[4].values
+
+            #print('frame :',frame)
+            
             hdf5_path = os.path.join(hdf5_dir, fn + '.h5')
             with h5py.File(hdf5_path, 'w') as hf:
-
+                
                 hf.create_dataset('feature', data=feature, dtype=np.float32)
                 # hf.create_dataset('filename', data=[na.encode() for na in [fn]], dtype='S20')
 
                 hf.create_group('target')
-                hf['target'].create_dataset('event', data=[e.encode() for e in target_event], dtype='S20')
-                hf['target'].create_dataset('start_time', data=target_start_time, dtype=np.float32)
-                hf['target'].create_dataset('end_time', data=target_end_time, dtype=np.float32)
-                hf['target'].create_dataset('elevation', data=target_ele, dtype=np.float32)
+                hf['target'].create_dataset('frame', data=target_frame, dtype=np.float32)
+                hf['target'].create_dataset('event', data=target_event, dtype=np.float32)
+                hf['target'].create_dataset('track_idx', data=target_track_idx, dtype=np.float32)
                 hf['target'].create_dataset('azimuth', data=target_azi, dtype=np.float32)
-                hf['target'].create_dataset('distance', data=target_dist, dtype=np.float32)    
+                hf['target'].create_dataset('elevation', data=target_ele, dtype=np.float32)
 
             tqdm.write('{}, {}, {}'.format(audio_count, hdf5_path, feature.shape))
-    
+
+            #pdb.set_trace()
+
     iterator.close()
     print("Extacting feature finished! Time spent: {:.3f} s".format(timer() - begin_time))
 

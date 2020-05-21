@@ -14,21 +14,22 @@ from librosa.display import specshow
 from torch.backends import cudnn
 from tqdm import tqdm
 
-event_labels = ['knock', 'drawer', 'clearthroat', 'phone', 'keysDrop',\
-    'speech', 'keyboard', 'pageturn', 'cough', 'doorslam', 'laughter']
+event_labels = ['alarm', 'crying_baby', 'crash', 'barking_dog', 'running_engine', 'female_scream',\
+    'female_speech', 'burning_fire', 'footsteps', 'knocking_on_door', 'male_scream', 'male_speech',\
+    'ringing_phone', 'piano']
 lb_to_ix = {lb: i for i, lb in enumerate(event_labels)}
 ix_to_lb = {i: lb for i, lb in enumerate(event_labels)}
 
-azimuths = range(-180, 171, 10)
-elevations = range(-40, 41, 10)
+azimuths = range(-180, 180)
+elevations = range(-45, 46)
 doa = [azimuths, elevations]
 doa_labels = list(itertools.product(*doa))
 doa_to_ix = {doa: i for i, doa in enumerate(doa_labels)}
 ix_to_doa = {i: doa for i, doa in enumerate(doa_labels)}
 
-train_splits_dict = {1: [2,3,4], 2: [1,3,4], 3: [1,2,4], 4: [1,2,3], -1: [1,2,3,4]}
-valid_split_dict = {1: [1], 2: [2], 3: [3], 4: [4], -1: []}
-test_split_dict = {1: [1], 2: [2], 3: [3], 4: [4], -1: []}
+train_splits_dict = {1: [3,4,5,6], -1: [1,2,3,4,5,6]}
+valid_split_dict = {1: [2], -1: []}
+test_split_dict = {1: [1], -1: []}
 
 
 def get_doas(indexes):

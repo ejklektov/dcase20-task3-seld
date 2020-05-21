@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Data directory
-DATASET_DIR='/vol/vssp/AP_datasets/audio/dcase2019/task3/dataset_root/'
+	#DATASET_DIR='/vol/vssp/AP_datasets/audio/dcase2019/task3/dataset_root/'
+DATASET_DIR='../data/dcase20_seld_data/'
 
 # Feature directory
-FEATURE_DIR='/vol/vssp/msos/YinC/workspace/Dataset_Features/DCASE2019/task3/'
+FEATURE_DIR='../data/dcase20_seld_data/features/'
 
 # Workspace
-WORKSPACE='/vol/vssp/msos/YinC/workspace/DCASE2019/task3/'
+WORKSPACE='/dcase2020task3/surrey20/'
 cd $WORKSPACE
 
 ########### Hyper-parameters ###########
@@ -47,11 +48,11 @@ for EPOCH_NUM in {38..40..2}
 done
 
 # ensemble sed on different iterations and write out probabilities
-python ${WORKSPACE}main/ensemble.py iters_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
+python3 ${WORKSPACE}main/ensemble.py iters_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
 --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --data_aug=$DATA_AUG --seed=$SEED --name=$NAME
 
 # ensemble sed on different models and write out probabilities
-python ${WORKSPACE}main/ensemble.py models_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
+python3 ${WORKSPACE}main/ensemble.py models_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
 --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --data_aug=$DATA_AUG --seed=$SEED --name=$NAME
 
 # threshold the probabilities and write out submissions to 'sed_test_fusioned' folder
@@ -69,14 +70,14 @@ for EPOCH_NUM in {78..80..2}
 done
 
 # ensemble doa
-python ${WORKSPACE}main/ensemble.py iters_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
+python3 ${WORKSPACE}main/ensemble.py iters_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
 --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --data_aug=$DATA_AUG --seed=$SEED --name=$NAME
 
 # ensemble sed on different models and write out probabilities
-python ${WORKSPACE}main/ensemble.py models_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
+python3 ${WORKSPACE}main/ensemble.py models_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
 --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --data_aug=$DATA_AUG --seed=$SEED --name=$NAME
 
 # threshold the probabilities and write out submissions to 'sed_test_fusioned' folder
 THRESHOLD=0.5
-python ${WORKSPACE}main/ensemble.py threshold_models_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
+python3 ${WORKSPACE}main/ensemble.py threshold_models_ensemble --workspace=$WORKSPACE --feature_type=$FEATURE_TYPE --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE \
 --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --threshold=$THRESHOLD

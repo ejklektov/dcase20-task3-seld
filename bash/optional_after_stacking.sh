@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Data directory
-DATASET_DIR='/vol/vssp/AP_datasets/audio/dcase2019/task3/dataset_root/'
+DATASET_DIR='../data/dcase20_seld_data/'
 
 # Feature directory
-FEATURE_DIR='/vol/vssp/msos/YinC/workspace/Dataset_Features/DCASE2019/task3/'
+FEATURE_DIR='../data/dcase20_seld_data/features/'
 
 # Workspace
-WORKSPACE='/vol/vssp/msos/YinC/workspace/DCASE2019/task3/mycode_v21/'
+WORKSPACE='/dcase2020task3/surrey20/'
 cd $WORKSPACE
 
 ########### Hyper-parameters ###########

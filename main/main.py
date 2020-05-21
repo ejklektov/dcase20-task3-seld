@@ -26,9 +26,11 @@ from tqdm import tqdm
 import evaluation
 import models
 from loss import hybrid_regr_loss
+
 from torchsummary import summary
 from utils.data_augmentation import freq_mask, mixup, time_mask
-from utils.data_generator import DevDataGenerator, EvalDataGenerator
+#from utils.data_generator import DevDataGenerator19, EvalDataGenerator19
+from utils.data_generator import DevDataGenerator20, EvalDataGenerator20
 from utils.utilities import (create_logging, doa_labels, event_labels,
                              get_filename, logging_and_writer,
                              move_model_to_gpu, print_evaluation, str2bool,
@@ -47,10 +49,10 @@ threshold = {'sed': 0.5}
 
 fs = 32000
 nfft = 1024
-hopsize = 320 # 640 for 20 ms
+hopsize = 3200 # 3200 for 100ms
 mel_bins = 128
 frames_per_1s = fs // hopsize
-sub_frames_per_1s = 50
+sub_frames_per_1s = 5
 hopframes = int(0.5 * frames_per_1s)
 hdf5_folder_name = '{}fs_{}nfft_{}hs_{}melb'.format(fs, nfft, hopsize, mel_bins)
 
@@ -106,6 +108,7 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
                         cuda=args.cuda,
                         loss_type=loss_type,
                         threshold=threshold,
+                        data_dir=args.data_dir,
                         submissions_dir=temp_submissions_dir_train, 
                         frames_per_1s=frames_per_1s,
                         sub_frames_per_1s=sub_frames_per_1s)
@@ -124,7 +127,8 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
                         model=model, 
                         cuda=args.cuda,
                         loss_type=loss_type,
-                        threshold=threshold, 
+                        threshold=threshold,
+                        data_dir=args.data_dir,
                         submissions_dir=temp_submissions_dir_valid, 
                         frames_per_1s=frames_per_1s, 
                         sub_frames_per_1s=sub_frames_per_1s)
@@ -189,9 +193,13 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
             batch_x = time_mask(batch_x, ratio_T=0.1, num_masks=2, replace_with_zero=False)
 
         # Forward
+        pdb.set_trace()
+
         model.train()
         output = model(batch_x)
         
+        pdb.set_trace()
+
         # Loss
         seld_loss, _, _ = hybrid_regr_loss(output, batch_y_dict, args.task_type, loss_type=loss_type)
 
@@ -255,6 +263,7 @@ def test(args, data_generator, logging):
             cuda=args.cuda,
             loss_type=loss_type,
             threshold=threshold,
+            data_dir=args.data_dir,
             submissions_dir=fold_submissions_dir, 
             frames_per_1s=frames_per_1s,
             sub_frames_per_1s=sub_frames_per_1s,
@@ -299,7 +308,8 @@ def test_all_folds(args):
             test_submissions_dir = os.path.join(args.workspace, 'appendixes', 'submissions', args.name + '_' + args.model_sed + '_{}'.format(args.audio_type) +
                 '_{}'.format(args.feature_type) + '_aug_{}'.format(args.data_aug) + '_seed_{}'.format(args.seed), 'all_test')        
 
-    gt_meta_dir = '/vol/vssp/AP_datasets/audio/dcase2019/task3/dataset_root/dev/metadata_dev/'
+    #gt_meta_dir = '/vol/vssp/AP_datasets/audio/dcase2019/task3/dataset_root/dev/metadata_dev/'
+    gt_meta_dir = os.path.join(args.data_dir, 'dev', 'metadata_dev')
 
     print('\n===> Test All folds')
     start_time = timer()
@@ -459,6 +469,8 @@ if __name__ == '__main__':
     parser_train = subparsers.add_parser('train')
     parser_train.add_argument('--workspace', type=str, required=True,
                                 help='workspace directory')
+    parser_train.add_argument('--data_dir', type=str, required=True,
+                                help='data directory (for using metadata)')
     parser_train.add_argument('--feature_dir', type=str, required=True,
                                 help='feature directory')
     parser_train.add_argument('--feature_type', type=str, required=True,
@@ -491,6 +503,8 @@ if __name__ == '__main__':
     parser_test = subparsers.add_parser('test')
     parser_test.add_argument('--workspace', type=str, required=True,
                                 help='workspace directory')
+    parser_test.add_argument('--data_dir', type=str, required=True,
+                                help='data directory (for using metadata)')
     parser_test.add_argument('--feature_dir', type=str, required=True,
                                 help='feature directory')
     parser_test.add_argument('--feature_type', type=str, required=True,
@@ -539,6 +553,8 @@ if __name__ == '__main__':
                                 help='workspace directory')
     parser_infer_eval.add_argument('--feature_dir', type=str, required=True,
                                 help='feature directory')
+    parser_infer_eval.add_argument('--data_dir', type=str, required=True,
+                                help='data directory (for using metadata)')
     parser_infer_eval.add_argument('--feature_type', type=str, required=True,
                                 choices=['logmel', 'logmelgcc', 'logmelintensity', 'logmelgccintensity'])
     parser_infer_eval.add_argument('--audio_type', type=str, required=True, 
@@ -706,7 +722,7 @@ if __name__ == '__main__':
     if args.mode == 'train' or args.mode == 'test':
         hdf5_dir = os.path.join(args.feature_dir, args.feature_type,
                                 hdf5_folder_name, args.audio_type + '_dev')
-        data_generator = DevDataGenerator(
+        data_generator = DevDataGenerator20(
             args=args,
             hdf5_dir=hdf5_dir,
             logging=logging
@@ -714,7 +730,7 @@ if __name__ == '__main__':
     elif args.mode == 'infer_eval':
         hdf5_dir = os.path.join(args.feature_dir, args.feature_type,
                                 hdf5_folder_name, args.audio_type + '_eval')
-        data_generator = EvalDataGenerator(
+        data_generator = EvalDataGenerator20(
             args=args,
             hdf5_dir=hdf5_dir,
             logging=logging

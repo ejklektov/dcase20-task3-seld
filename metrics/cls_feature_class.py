@@ -125,24 +125,28 @@ class FeatureClass:
     # OUTPUT LABELS
     def read_desc_file(self, desc_filename, in_sec=False):
         desc_file = {
-            'class': list(), 'start': list(), 'end': list(), 'ele': list(), 'azi': list()
+            'frame': list(), 'class': list(), 'ov': list(), 'azi': list(), 'ele': list()
         }
         fid = open(desc_filename, 'r')
-        next(fid)
+        #next(fid)
         for line in fid:
             split_line = line.strip().split(',')
-            desc_file['class'].append(split_line[0])
+            desc_file['frame'].append(split_line[0])
+            desc_file['class'].append(split_line[1])
+            desc_file['ov'].append(split_line[2])
+            desc_file['azi'].append(split_line[3])
+            desc_file['ele'].append(split_line[4])
             # desc_file['class'].append(split_line[0].split('.')[0][:-3])
-            if in_sec:
-                # return onset-offset time in seconds
-                desc_file['start'].append(float(split_line[1]))
-                desc_file['end'].append(float(split_line[2]))
-            else:
-                # return onset-offset time in frames
-                desc_file['start'].append(int(np.floor(float(split_line[1])*self._frame_res)))
-                desc_file['end'].append(int(np.ceil(float(split_line[2])*self._frame_res)))
-            desc_file['ele'].append(int(split_line[3]))
-            desc_file['azi'].append(int(split_line[4]))
+            #if in_sec:
+            #    # return onset-offset time in seconds
+            #    desc_file['start'].append(float(split_line[1]))
+            #    desc_file['end'].append(float(split_line[2]))
+            #else:
+            #    # return onset-offset time in frames
+            #    desc_file['start'].append(int(np.floor(float(split_line[1])*self._frame_res)))
+            #    desc_file['end'].append(int(np.ceil(float(split_line[2])*self._frame_res)))
+            #desc_file['ele'].append(int(split_line[3]))
+            #desc_file['azi'].append(int(split_line[4]))
         fid.close()
         return desc_file
 

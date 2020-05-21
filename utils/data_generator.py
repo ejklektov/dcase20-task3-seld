@@ -11,7 +11,11 @@ from utils.utilities import (doa_labels, doa_to_ix, event_labels, lb_to_ix,
                              valid_split_dict)
 
 
-class DevDataGenerator(object):
+
+
+
+
+class DevDataGenerator19(object):
 
     def __init__(self, args, hdf5_dir, logging=logging):
         """
@@ -43,9 +47,11 @@ class DevDataGenerator(object):
 
         hdf5_fns = sorted(os.listdir(hdf5_dir))
         
-        self.train_hdf5_fn = [fn for fn in hdf5_fns if int(fn[5]) in train_splits]
-        self.valid_hdf5_fn = [fn for fn in hdf5_fns if int(fn[5]) in valid_splits]
-        self.test_hdf5_fn = [fn for fn in hdf5_fns if int(fn[5]) in test_splits]
+        #pdb.set_trace()
+
+        self.train_hdf5_fn = [fn for fn in hdf5_fns if int(fn[4]) in train_splits] # fn[4] ==> fold?_room...
+        self.valid_hdf5_fn = [fn for fn in hdf5_fns if int(fn[4]) in valid_splits]
+        self.test_hdf5_fn = [fn for fn in hdf5_fns if int(fn[4]) in test_splits]
 
         # Load the segmented data
         load_begin_time = timer()
@@ -60,11 +66,12 @@ class DevDataGenerator(object):
         self.train_segmented_indexes = []
         
         for hdf5_fn in self.train_hdf5_fn:
+            
+            #pdb.set_trace()
 
             fn = hdf5_fn.split('.')[0]
-            if fn[13] != '3': # overlapping == 1
-                hdf5_path = os.path.join(hdf5_dir, hdf5_fn)
-                feature, target_event, target_doa, target_dist = \
+            if fn[21] != '3': # overlapping == 1
+                hdf5_path = os.path.join(hdf5_dir, hdf5_fn                feature, target_event, target_doa, target_dist = \
                     self.load_hdf5(hdf5_path)
 
                 train_index = []
@@ -98,6 +105,9 @@ class DevDataGenerator(object):
                 self.train_target_doas_list.append(target_doa)
                 self.train_target_dists_list.append(target_dist)
                 self.train_segmented_indexes.append(train_index)
+
+                #pdb.set_trace()
+        #pdb.set_trace()
         
         self.train_features = np.concatenate(self.train_features_list, axis=1)
         self.train_target_events = np.concatenate(self.train_target_events_list, axis=0)
@@ -134,7 +144,7 @@ class DevDataGenerator(object):
         for hdf5_fn in self.test_hdf5_fn:
             
             fn = hdf5_fn.split('.')[0]
-            if fn[13] != '3': # overlapping == 1
+            if fn[21] != '3': # overlapping == 1
                 hdf5_path = os.path.join(hdf5_dir, hdf5_fn)
                 feature, target_event, target_doa, target_dist = \
                     self.load_hdf5(hdf5_path)
@@ -310,7 +320,7 @@ class DevDataGenerator(object):
             yield batch_x, batch_y_dict, batch_fn
 
 
-class EvalDataGenerator(object):
+class EvalDataGenerator19(object):
 
     def __init__(self, args, hdf5_dir, logging=logging):
         """
@@ -378,3 +388,57 @@ class EvalDataGenerator(object):
             batch_fn = fn[idx]
 
             yield batch_x, batch_fn
+
+
+class DevDataGenerator20(DevDataGenerator19):
+    #def __init__(self, args, hdf5_dir, logging=logging):
+    #    super().__init__(self, args, hdf5_dir, logging=logging):
+
+    def load_hdf5(self, hdf5_path):
+        '''
+        Load hdf5. 
+        
+        Args:
+          hdf5_path: string
+          
+        Returns:
+          feature: (channel_num, frame_num, freq_bins)
+          target_event: (frame_num, class_num)
+          target_doa: (frame_num, 2*class_num) for 'regr' | (frame_num, class_num, ele_num*azi_num=324) for 'clas'
+          target_track_idx: (frame_num, track_number_index)
+          (NO =>) target_dist: (frame_num, class_num) for 'regr' | (frame_num, class_num, 2) for 'clas'
+        '''
+
+        with h5py.File(hdf5_path, 'r') as hf:
+            #pdb.set_trace()
+
+            feature = hf['feature'][:]                  # float
+            frame = hf['target']['frame'][:]            # float
+            event = hf['target']['event'][:]            # float
+            track_idx = hf['target']['track_idx'][:]    # float
+            azimuth = hf['target']['azimuth'][:]        # float
+            elevation = hf['target']['elevation'][:]    # float
+        
+        frame_num = feature.shape[1]
+        target_event = np.zeros((frame_num, self.class_num))
+        target_ele = np.zeros((frame_num, self.class_num))
+        target_azi = np.zeros((frame_num, self.class_num))
+        target_track_idx = np.zeros((frame_num, self.class_num))
+        
+        #for n in range(frame_num):
+        #pdb.set_trace()
+        for i, fr_float in enumerate(frame) :
+            f = int(fr_float)
+            e = int(event[i])
+            target_event[f][e] = 1.0
+            target_ele[f][e] = elevation[i] * np.pi / 180.0
+            target_azi[f][e] = azimuth[i] * np.pi / 180.0
+            target_track_idx[f][e] = track_idx[i] * 1.0
+
+        target_doa = np.concatenate((target_azi, target_ele), axis=-1)
+
+        return feature, target_event, target_doa, target_track_idx
+
+
+class EvalDataGenerator20(EvalDataGenerator19):
+    pass
