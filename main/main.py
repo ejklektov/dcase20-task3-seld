@@ -462,6 +462,7 @@ def infer_eval(args, data_generator, logging):
 
 
 if __name__ == '__main__':
+    os.environ["CUDA_VISIBLE_DEVICES"]="0"
     parser = argparse.ArgumentParser(description='DCASE2019 task3')
 
     subparsers = parser.add_subparsers(dest='mode')

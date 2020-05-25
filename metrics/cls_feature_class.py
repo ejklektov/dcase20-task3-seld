@@ -37,7 +37,7 @@ class FeatureClass:
         # Local parameters
         self._is_eval = is_eval
 
-        self._fs = 48000
+        self._fs = 24000
         self._hop_len_s = 0.02
         self._hop_len = int(self._fs * self._hop_len_s)
         self._frame_res = self._fs / float(self._hop_len)
