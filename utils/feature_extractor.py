@@ -15,9 +15,9 @@ from tqdm import tqdm
 
 from utilities import calculate_scalar, event_labels, lb_to_ix
 
-fs = 32000
+fs = 24000 ##check##
 nfft = 1024
-hopsize = 3200 # 3200 for 100 ms
+hopsize = 2400 ##check## # 3200 for 100 ms
 mel_bins = 128
 window = 'hann'
 fmin = 50

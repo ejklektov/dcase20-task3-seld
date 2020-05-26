@@ -21,7 +21,7 @@ lb_to_ix = {lb: i for i, lb in enumerate(event_labels)}
 ix_to_lb = {i: lb for i, lb in enumerate(event_labels)}
 
 azimuths = range(-180, 180)
-elevations = range(-45, 46)
+elevations = range(-90, 90)
 doa = [azimuths, elevations]
 doa_labels = list(itertools.product(*doa))
 doa_to_ix = {doa: i for i, doa in enumerate(doa_labels)}

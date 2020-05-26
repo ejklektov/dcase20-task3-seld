@@ -10,11 +10,6 @@ from utils.utilities import (doa_labels, doa_to_ix, event_labels, lb_to_ix,
                              test_split_dict, train_splits_dict,
                              valid_split_dict)
 
-
-
-
-
-
 class DevDataGenerator19(object):
 
     def __init__(self, args, hdf5_dir, logging=logging):
@@ -71,7 +66,8 @@ class DevDataGenerator19(object):
 
             fn = hdf5_fn.split('.')[0]
             if fn[21] != '3': # overlapping == 1
-                hdf5_path = os.path.join(hdf5_dir, hdf5_fn                feature, target_event, target_doa, target_dist = \
+                hdf5_path = os.path.join(hdf5_dir, hdf5_fn)
+                feature, target_event, target_doa, target_dist = \
                     self.load_hdf5(hdf5_path)
 
                 train_index = []

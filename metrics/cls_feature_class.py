@@ -38,7 +38,7 @@ class FeatureClass:
         self._is_eval = is_eval
 
         self._fs = 24000
-        self._hop_len_s = 0.02
+        self._hop_len_s = 0.1 ######check######
         self._hop_len = int(self._fs * self._hop_len_s)
         self._frame_res = self._fs / float(self._hop_len)
         self._nb_frames_1s = int(self._frame_res)
@@ -54,23 +54,26 @@ class FeatureClass:
         self._unique_classes = dict()
         self._unique_classes = \
             {
-                'clearthroat': 2,
-                'cough': 8,
-                'doorslam': 9,
-                'drawer': 1,
-                'keyboard': 6,
-                'keysDrop': 4,
-                'knock': 0,
-                'laughter': 10,
-                'pageturn': 7,
-                'phone': 3,
-                'speech': 5
+                'alarm' : 0,
+                'crying_baby' : 1,
+                'crash' : 2,
+                'barking_dog' : 3,
+                'running_engine' : 4,
+                'female_scream' : 5,
+                'female_speech' : 6,
+                'burning_fire' : 7,
+                'footsteps' : 8,
+                'knocking_on_door' : 9,
+                'male_scream' : 10,
+                'male_speech' : 11,
+                'ringing_phone' : 12,
+                'piano' : 13
             }
 
-        self._doa_resolution = 10
+        self._doa_resolution = 1
         self._azi_list = range(-180, 180, self._doa_resolution)
         self._length = len(self._azi_list)
-        self._ele_list = range(-40, 50, self._doa_resolution)
+        self._ele_list = range(-90, 90, self._doa_resolution) ##check##
         self._height = len(self._ele_list)
 
         self._audio_max_len_samples = 60 * self._fs  # TODO: Fix the audio synthesis code to always generate 60s of
@@ -80,7 +83,7 @@ class FeatureClass:
 
         # For regression task only
         self._default_azi = 180
-        self._default_ele = 50
+        self._default_ele = 90
 
         if self._default_azi in self._azi_list:
             print('ERROR: chosen default_azi value {} should not exist in azi_list'.format(self._default_azi))
@@ -212,15 +215,20 @@ class FeatureClass:
         :return: _labels: matrix of SELD labels of dimension [nb_frames, nb_classes, nb_azi*nb_ele],
                           which is 1 for active sound event and location else zero
         """
-
+        ####check#### max_frames => 600? or 3000?
         _labels = np.zeros((self._max_frames, len(self._unique_classes), len(self._azi_list) * len(self._ele_list)))
-        for _ind, _start_frame in enumerate(_desc_file['start']):
-            _tmp_class = self._unique_classes[_desc_file['class'][_ind]]
-            _tmp_azi = _desc_file['azi'][_ind]
-            _tmp_ele = _desc_file['ele'][_ind]
-            _tmp_end = self._max_frames if _desc_file['end'][_ind] > self._max_frames else _desc_file['end'][_ind]
-            _tmp_ind = self.get_list_index(_tmp_azi, _tmp_ele)
-            _labels[_start_frame:_tmp_end + 1, _tmp_class, _tmp_ind] = 1
+        #for _ind, _start_frame in enumerate(_desc_file['start']):
+        #    _tmp_class = self._unique_classes[_desc_file['class'][_ind]]
+        #    _tmp_azi = _desc_file['azi'][_ind]
+        #    _tmp_ele = _desc_file['ele'][_ind]
+        #    _tmp_end = self._max_frames if _desc_file['end'][_ind] > self._max_frames else _desc_file['end'][_ind]
+        #    _tmp_ind = self.get_list_index(_tmp_azi, _tmp_ele)
+        #    _labels[_start_frame:_tmp_end + 1, _tmp_class, _tmp_ind] = 1
+        for i, f in enumerate(_desc_file['frame']) :
+            _frame = int(f)
+            _class = int(_desc_file['class'][i])
+            _ov = int(_desc_file['ov'][i])
+            _labels[_frame, _class, _ov]
 
         return _labels
 

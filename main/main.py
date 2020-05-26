@@ -47,9 +47,9 @@ loss_type = 'MAE'
 weight_decay = 0
 threshold = {'sed': 0.5}
 
-fs = 32000
+fs = 24000 ##check##
 nfft = 1024
-hopsize = 3200 # 3200 for 100ms
+hopsize = 2400 ##check##  # 3200 for 100ms
 mel_bins = 128
 frames_per_1s = fs // hopsize
 sub_frames_per_1s = 5
@@ -193,12 +193,8 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
             batch_x = time_mask(batch_x, ratio_T=0.1, num_masks=2, replace_with_zero=False)
 
         # Forward
-        pdb.set_trace()
-
         model.train()
         output = model(batch_x)
-        
-        pdb.set_trace()
 
         # Loss
         seld_loss, _, _ = hybrid_regr_loss(output, batch_y_dict, args.task_type, loss_type=loss_type)
