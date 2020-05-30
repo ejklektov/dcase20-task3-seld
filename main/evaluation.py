@@ -10,12 +10,12 @@ import torch.nn as nn
 from sklearn.metrics import average_precision_score, confusion_matrix
 
 from loss import hybrid_regr_loss
-from metrics import cls_feature_class, evaluation_metrics
+from metrics import cls_feature_class, evaluation_metrics, SELD_evaluation_metrics
 from utils.utilities import to_np, to_torch
 
 
 def evaluate(data_generator, data_type, max_audio_num, task_type, model, cuda, loss_type, 
-        threshold, data_dir, submissions_dir=None, frames_per_1s=100, sub_frames_per_1s=50, FUSION=False, epoch_num=None):
+        threshold, data_dir, submissions_dir=None, frames_per_1s=100, sub_frames_per_1s=50, FUSION=False, epoch_num=None, max_epochs=None, cur_epoch=None):
     '''
     Evaluate metrics for cross validation or test data
 
@@ -177,7 +177,17 @@ def evaluate(data_generator, data_type, max_audio_num, task_type, model, cuda, l
 
     ###################### SED and DOA metrics, for submission method evaluation ######################
     gt_meta_dir = os.path.join(data_dir, 'dev', 'metadata_dev')
-    sed_scores, doa_er_metric, seld_metric = calculate_SELD_metrics(gt_meta_dir, submissions_dir, score_type='all')
+    sed_scores19, doa_er_metric19, seld_metric19 = calculate_SELD_metrics(gt_meta_dir, submissions_dir, score_type='all')
+
+    param20 = {
+        'best_seld_metric' : 99999,
+        'best_epoch' : -1,
+        'patience_cnt' : 0,
+        'new_metric' : np.zeros(4),
+        'new_seld_metric' : np.zeros(1),
+        'frames_per_1s' : frames_per_1s
+    }
+    new_metric, new_seld_metric = calculate_SELD_metrics20(sed_pred, sed_gt, doa_pred, doa_gt, param20, cur_epoch)
     ###################################################################################################
 
     ## mAP
@@ -198,11 +208,24 @@ def evaluate(data_generator, data_type, max_audio_num, task_type, model, cuda, l
     seld_loss, sed_loss, doa_loss = hybrid_regr_loss(forLoss_pred_dict, forLoss_gt_dict, task_type, loss_type=loss_type)
     loss = [to_np(seld_loss), to_np(sed_loss), to_np(doa_loss)]
 
-    metrics = [loss, sed_mAP, sed_scores, doa_er_metric, seld_metric]
+    metrics19 = [loss, sed_mAP, sed_scores19, doa_er_metric19, seld_metric19, new_metric, new_seld_metric]
+
+    # import neptune
+    # neptune.log_metric('metric19/loss', loss)
+    # neptune.log_metric('metric19/sed_mAP_micro', sed_mAP[0])seld_loss
+    # neptune.log_metric('metric19/sed_mAP_macro', sed_mAP[1])
+    # neptune.log_metric('metric19/sed_scores19', sed_scores19)
+    # neptune.log_metric('metric19/doa_er_metric19', doa_er_metric19)
+    # neptune.log_metric('metric19/seld_metric19', seld_metric19)
+    #
+    # neptune.log_metric('metric19/seld_metric19', new_metric)
+    # neptune.log_metric('metric19/seld_metric19', new_metric)
+    # neptune.log_metric('metric19/seld_metric19', new_seld_metric)
+    # neptune.log_metric('metric19/seld_metric19', seld_metric19)
 
     # torch.cuda.empty_cache()
 
-    return  metrics 
+    return metrics19
 
 
 def calculate_submission(output_dict, frames_per_1s, sub_frames_per_1s=50):
@@ -359,3 +382,92 @@ def calculate_SELD_metrics(gt_meta_dir, pred_meta_dir, score_type):
     seld_metric = np.array(seld_metric).squeeze()
 
     return sed_scores, doa_er_metric, seld_metric
+
+
+def calculate_SELD_metrics20(sed_pred, sed_gt, doa_pred, doa_gt, param20, cur_epoch):
+    '''Calculate metrics using official tool. This part of code is modified from:
+    https://github.com/sharathadavanne/seld-dcase2019/blob/master/calculate_SELD_metrics.py
+
+    Args:
+      gt_meta_dir: ground truth meta directory.
+      pred_meta_dir: prediction meta directory.
+      score_type: 'all', 'split', 'ov', 'ir'
+
+    Returns:
+      metrics: dict
+    '''
+    best_seld_metric = param20['best_seld_metric']
+    best_epoch = param20['best_epoch']
+    patience_cnt = param20['patience_cnt']
+    new_metric = param20['new_metric']
+    new_seld_metric = param20['new_seld_metric']
+
+    cls_new_metric = SELD_evaluation_metrics.SELDMetrics_custom(nb_classes=14,
+                                                                doa_threshold=20,
+                                                                frames_per_1s=param20['frames_per_1s'])
+    pred_dict = cls_new_metric.regression_label_format_to_output_format(
+        sed_pred, doa_pred
+    )
+    gt_dict = cls_new_metric.regression_label_format_to_output_format(
+        sed_gt, doa_gt
+    )
+
+    pred_blocks_dict = cls_new_metric.segment_labels(pred_dict, sed_pred.shape[0])
+    gt_blocks_dict = cls_new_metric.segment_labels(gt_dict, sed_gt.shape[0])
+
+    cls_new_metric.update_seld_scores(pred_blocks_dict, gt_blocks_dict)
+    # new_metric[cur_epoch, :] = cls_new_metric.compute_seld_scores()
+    new_metric = cls_new_metric.compute_seld_scores()
+    # new_seld_metric[cur_epoch] = cls_new_metric.early_stopping_metric(new_metric[cur_epoch, :2], new_metric[cur_epoch, 2:])
+    new_seld_metric = cls_new_metric.early_stopping_metric(new_metric[:2], new_metric[2:])
+
+    # Visualize the metrics with respect to epochs #
+    #plot_functions(unique_name, tr_loss, sed_metric, doa_metric, seld_metric, new_metric, new_seld_metric)
+
+    #patience_cnt += 1
+    # if new_seld_metric[cur_epoch] < best_seld_metric:
+    #     best_seld_metric = new_seld_metric[cur_epoch]
+    #     best_epoch = cur_epoch
+    #     model.save(model_name)
+    #     patience_cnt = 0
+
+    #if patience_cnt > params['patience']:
+    #    break
+
+    ############
+
+    # print(
+    #     'epoch_cnt: {}, time: {:0.2f}s, tr_loss: {:0.2f}, '
+    #     '\n\t\t DCASE2019 SCORES: ER: {:0.2f}, F: {:0.1f}, DE: {:0.1f}, FR:{:0.1f}, seld_score: {:0.2f}, '
+    #     '\n\t\t DCASE2020 SCORES: ER: {:0.2f}, F: {:0.1f}, DE: {:0.1f}, DE_F:{:0.1f}, seld_score (early stopping score): {:0.2f}, '
+    #     'best_seld_score: {:0.2f}, best_epoch : {}\n'.format(
+    #         cur_epoch, time.time() - start, tr_loss[cur_epoch],
+    #         sed_metric[cur_epoch, 0], sed_metric[cur_epoch, 1] * 100,
+    #         doa_metric[cur_epoch, 0], doa_metric[cur_epoch, 1] * 100, seld_metric[cur_epoch],
+    #         new_metric[cur_epoch, 0], new_metric[cur_epoch, 1] * 100,
+    #         new_metric[cur_epoch, 2], new_metric[cur_epoch, 3] * 100,
+    #         new_seld_metric[cur_epoch], best_seld_metric, best_epoch
+    #     )
+    # )
+    #
+    # avg_scores_val.append([new_metric[best_epoch, 0], new_metric[best_epoch, 1], new_metric[best_epoch, 2],
+    #                        new_metric[best_epoch, 3], best_seld_metric])
+    # print('\nResults on validation split:')
+    # print('\tUnique_name: {} '.format(unique_name))
+    # print('\tSaved model for the best_epoch: {}'.format(best_epoch))
+    # print('\tSELD_score (early stopping score) : {}'.format(best_seld_metric))
+    #
+    # print('\n\tDCASE2020 scores')
+    # print('\tClass-aware localization scores: DOA_error: {:0.1f}, F-score: {:0.1f}'.format(new_metric[best_epoch, 2],
+    #                                                                                        new_metric[best_epoch, 3] * 100))
+    # print('\tLocation-aware detection scores: Error rate: {:0.2f}, F-score: {:0.1f}'.format(new_metric[best_epoch, 0],
+    #                                                                                         new_metric[
+    #                                                                                             best_epoch, 1] * 100))
+
+    # print('\n\tDCASE2019 scores')
+    # print('\tLocalization-only scores: DOA_error: {:0.1f}, Frame recall: {:0.1f}'.format(doa_metric[best_epoch, 0],
+    #                                                                                 doa_metric[best_epoch, 1] * 100))
+    # print('\tDetection-only scores: Error rate: {:0.2f}, F-score: {:0.1f}\n'.format(sed_metric[best_epoch, 0],
+    #                                                                                 sed_metric[best_epoch, 1] * 100))
+
+    return new_metric, new_seld_metric

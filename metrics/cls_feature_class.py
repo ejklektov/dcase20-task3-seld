@@ -228,7 +228,7 @@ class FeatureClass:
             _frame = int(f)
             _class = int(_desc_file['class'][i])
             _ov = int(_desc_file['ov'][i])
-            _labels[_frame, _class, _ov]
+            _labels[ _frame, _class, _ov ] = 1
 
         return _labels
 

@@ -52,7 +52,7 @@ nfft = 1024
 hopsize = 2400 ##check##  # 3200 for 100ms
 mel_bins = 128
 frames_per_1s = fs // hopsize
-sub_frames_per_1s = 5
+sub_frames_per_1s = 10
 hopframes = int(0.5 * frames_per_1s)
 hdf5_folder_name = '{}fs_{}nfft_{}hs_{}melb'.format(fs, nfft, hopsize, mel_bins)
 
@@ -91,7 +91,8 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
         ################
         ## Validation
         ################
-        if batch_idx % 200 == 0:
+        if batch_idx % 3000 == 0:
+        #if batch_idx % batchNum_per_epoch == 0:
 
             valid_begin_time = timer()
             train_time = valid_begin_time - train_begin_time
@@ -111,7 +112,10 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
                         data_dir=args.data_dir,
                         submissions_dir=temp_submissions_dir_train, 
                         frames_per_1s=frames_per_1s,
-                        sub_frames_per_1s=sub_frames_per_1s)
+                        sub_frames_per_1s=sub_frames_per_1s,
+                        max_epochs=args.max_epochs,
+                        cur_epoch=epoch
+            )
 
             logging.info('------------------------------------------------------------------------------------------------------------------------------------')
             
@@ -131,11 +135,14 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
                         data_dir=args.data_dir,
                         submissions_dir=temp_submissions_dir_valid, 
                         frames_per_1s=frames_per_1s, 
-                        sub_frames_per_1s=sub_frames_per_1s)
+                        sub_frames_per_1s=sub_frames_per_1s,
+                        max_epochs=args.max_epochs,
+                        cur_epoch=epoch
+                )
                 metrics = [train_metrics, valid_metrics]
-                logging_and_writer('valid', metrics, logging, writer, batch_idx)
+                logging_and_writer('valid', metrics, logging, writer, batch_idx=epoch)
             else:
-                logging_and_writer('train', train_metrics, logging, writer, batch_idx)
+                logging_and_writer('train', train_metrics, logging, writer, batch_idx=epoch)
 
             valid_time = timer() - valid_begin_time
             logging.info('Iters: {},  Epoch/Total epoch: {}/{},  Batch/Total batch per epoch: {}/{},  Train time: {:.3f}s,  Eval time: {:.3f}s'.format(
@@ -574,6 +581,14 @@ if __name__ == '__main__':
 
 
     args = parser.parse_args()
+
+    # import neptune
+    # neptune.init('hyeom/dcase20-task3')
+    # neptune.create_experiment(name='surrey20-v200529',
+    #                           params=args.__dict__,
+    #                           tags=['dcase20', 'task3', 'seld']
+    #                           )
+    # neptune.log_text('purpose', 'surrey19 vs 20 (with 19metric): knowing how much increase difficulty')
 
     '''
     1. Miscellaneous

@@ -4,6 +4,7 @@ import itertools
 import logging
 import os
 import sys
+import neptune
 
 import librosa
 import matplotlib.pyplot as plt
@@ -183,73 +184,147 @@ def logging_and_writer(data_type, metrics, logging, writer=[], batch_idx=0):
     if data_type == 'train':
 
         [tr_loss, tr_sed_mAP, tr_sed_scores, tr_doa_er_metric, 
-            tr_seld_metric] = metrics
+            tr_seld_metric, tr_new_metric, tr_new_seld_metric] = metrics
 
         logging.info('Train SELD loss: {:.3f},  Train SED loss: {:.3f},  Train DOA loss: {:.3f},  '
             'Train SED mAP(micro): {:.3f},  Train SED mAP(macro): {:.3f}'.format(
                 tr_loss[0], tr_loss[1], tr_loss[2], tr_sed_mAP[0], tr_sed_mAP[1]))
-        writer.add_scalar('train/SELD_loss', tr_loss[0], batch_idx)
-        writer.add_scalar('train/SED_loss', tr_loss[1], batch_idx)
-        writer.add_scalar('train/DOA_loss', tr_loss[2], batch_idx)
-        writer.add_scalar('train/SED_mAP_micro', tr_sed_mAP[0], batch_idx)
-        writer.add_scalar('train/SED_mAP_macro', tr_sed_mAP[1], batch_idx) 
+        writer.add_scalar('train/19-SELD_loss', tr_loss[0], batch_idx)
+        writer.add_scalar('train/19-SED_loss', tr_loss[1], batch_idx)
+        writer.add_scalar('train/19-DOA_loss', tr_loss[2], batch_idx)
+        writer.add_scalar('train/19-SED_mAP_micro', tr_sed_mAP[0], batch_idx)
+        writer.add_scalar('train/19-SED_mAP_macro', tr_sed_mAP[1], batch_idx)
+
+        # neptune.log_metric('train/19-SELD_loss', tr_loss[0], batch_idx)
+        # neptune.log_metric('train/19-SED_loss', tr_loss[1], batch_idx)
+        # neptune.log_metric('train/19-DOA_loss', tr_loss[2], batch_idx)
+        # neptune.log_metric('train/19-SED_mAP_micro', tr_sed_mAP[0], batch_idx)
+        # neptune.log_metric('train/19-SED_mAP_macro', tr_sed_mAP[1], batch_idx)
        
         logging.info('Train ER: {:.3f},  Train F-score: {:.3f},  Train DOA error: {:.3f},  Train DOA frame recall: {:.3f},  Train SELD error: {:.3f}'.format(
             tr_sed_scores[0], tr_sed_scores[1], tr_doa_er_metric[0], tr_doa_er_metric[1], tr_seld_metric))
-        writer.add_scalar('train/ER', tr_sed_scores[0], batch_idx)
-        writer.add_scalar('train/F_score', tr_sed_scores[1], batch_idx)
-        writer.add_scalar('train/DOA_error', tr_doa_er_metric[0], batch_idx)
-        writer.add_scalar('train/DOA_frame_recall', tr_doa_er_metric[1], batch_idx)
-        writer.add_scalar('train/SELD_error', tr_seld_metric, batch_idx)  
+        writer.add_scalar('train/19-ER', tr_sed_scores[0], batch_idx)
+        writer.add_scalar('train/19-F_score', tr_sed_scores[1], batch_idx)
+        writer.add_scalar('train/19-DOA_error', tr_doa_er_metric[0], batch_idx)
+        writer.add_scalar('train/19-DOA_frame_recall', tr_doa_er_metric[1], batch_idx)
+        writer.add_scalar('train/19-SELD_error', tr_seld_metric, batch_idx)
+
+        # neptune.log_metric('train/19-ER', tr_sed_scores[0], batch_idx)
+        # neptune.log_metric('train/19-F_score', tr_sed_scores[1], batch_idx)
+        # neptune.log_metric('train/19-DOA_error', tr_doa_er_metric[0], batch_idx)
+        # neptune.log_metric('train/19-DOA_frame_recall', tr_doa_er_metric[1], batch_idx)
+        # neptune.log_metric('train/19-SELD_error', tr_seld_metric, batch_idx)
+
+        # 20 metric #
+        writer.add_scalar('train/20-ER', tr_new_metric[0], batch_idx)
+        writer.add_scalar('train/20-F_score', tr_new_metric[1], batch_idx)
+        writer.add_scalar('train/20-DOA_error', tr_new_metric[2], batch_idx)
+        writer.add_scalar('train/20-DOA_frame_recall', tr_new_metric[3], batch_idx)
+        writer.add_scalar('train/20-SELD_error', tr_new_seld_metric, batch_idx)
+
+        # neptune.log_metric('train/20-ER', tr_new_metric[0], batch_idx)
+        # neptune.log_metric('train/20-F_score', tr_new_metric[1], batch_idx)
+        # neptune.log_metric('train/20-DOA_error', tr_new_metric[2], batch_idx)
+        # neptune.log_metric('train/20-DOA_frame_recall', tr_new_metric[3], batch_idx)
+        # neptune.log_metric('train/20-SELD_error', tr_new_seld_metric, batch_idx)
 
     elif data_type == 'valid':
         
         [train_metrics, valid_metrics] = metrics
 
         [tr_loss, tr_sed_mAP, tr_sed_scores, tr_doa_er_metric, 
-            tr_seld_metric] = train_metrics
+            tr_seld_metric, tr_new_metric, tr_new_seld_metric] = train_metrics
 
         [va_loss, va_sed_mAP, va_sed_scores, va_doa_er_metric, 
-            va_seld_metric] = valid_metrics
+            va_seld_metric, va_new_metric, va_new_seld_metric] = valid_metrics
 
         logging.info('Train SELD loss: {:.3f},  Train SED loss: {:.3f},  Train DOA loss: {:.3f},  '
             'Train SED mAP(micro): {:.3f},  Train SED mAP(macro): {:.3f}'.format(
                 tr_loss[0], tr_loss[1], tr_loss[2], tr_sed_mAP[0], tr_sed_mAP[1]))
-        writer.add_scalar('train/SELD_loss', tr_loss[0], batch_idx)
-        writer.add_scalar('train/SED_loss', tr_loss[1], batch_idx)
-        writer.add_scalar('train/DOA_loss', tr_loss[2], batch_idx)
-        writer.add_scalar('train/SED_mAP_micro', tr_sed_mAP[0], batch_idx)
-        writer.add_scalar('train/SED_mAP_macro', tr_sed_mAP[1], batch_idx) 
+        writer.add_scalar('train/19-SELD_loss', tr_loss[0], batch_idx)
+        writer.add_scalar('train/19-SED_loss', tr_loss[1], batch_idx)
+        writer.add_scalar('train/19-DOA_loss', tr_loss[2], batch_idx)
+        writer.add_scalar('train/19-SED_mAP_micro', tr_sed_mAP[0], batch_idx)
+        writer.add_scalar('train/19-SED_mAP_macro', tr_sed_mAP[1], batch_idx)
+
+        # neptune.log_metric('train/19-SELD_loss', tr_loss[0], batch_idx)
+        # neptune.log_metric('train/19-SED_loss', tr_loss[1], batch_idx)
+        # neptune.log_metric('train/19-DOA_loss', tr_loss[2], batch_idx)
+        # neptune.log_metric('train/19-SED_mAP_micro', tr_sed_mAP[0], batch_idx)
+        # neptune.log_metric('train/19-SED_mAP_macro', tr_sed_mAP[1], batch_idx)
 
         logging.info('Valid SELD loss: {:.3f},  Valid SED loss: {:.3f},  Valid DOA loss: {:.3f},  '
             'Valid SED mAP(micro): {:.3f},  Valid SED mAP(macro): {:.3f}'.format(
                 va_loss[0], va_loss[1], va_loss[2], va_sed_mAP[0], va_sed_mAP[1]))
-        writer.add_scalar('valid/SELD_loss', va_loss[0], batch_idx)
-        writer.add_scalar('valid/SED_loss', va_loss[1], batch_idx)
-        writer.add_scalar('valid/DOA_loss', va_loss[2], batch_idx)
-        writer.add_scalar('valid/SED_mAP_micro', va_sed_mAP[0], batch_idx)
-        writer.add_scalar('valid/SED_mAP_macro', va_sed_mAP[1], batch_idx) 
+        writer.add_scalar('valid/19-SELD_loss', va_loss[0], batch_idx)
+        writer.add_scalar('valid/19-SED_loss', va_loss[1], batch_idx)
+        writer.add_scalar('valid/19-DOA_loss', va_loss[2], batch_idx)
+        writer.add_scalar('valid/19-SED_mAP_micro', va_sed_mAP[0], batch_idx)
+        writer.add_scalar('valid/19-SED_mAP_macro', va_sed_mAP[1], batch_idx)
+
+        # neptune.log_metric('valid/19-SELD_loss', va_loss[0], batch_idx)
+        # neptune.log_metric('valid/19-SED_loss', va_loss[1], batch_idx)
+        # neptune.log_metric('valid/19-DOA_loss', va_loss[2], batch_idx)
+        # neptune.log_metric('valid/19-SED_mAP_micro', va_sed_mAP[0], batch_idx)
+        # neptune.log_metric('valid/19-SED_mAP_macro', va_sed_mAP[1], batch_idx)
 
         logging.info('Train ER: {:.3f},  Train F-score: {:.3f},  Train DOA error: {:.3f},  Train DOA frame recall: {:.3f},  Train SELD error: {:.3f}'.format(
             tr_sed_scores[0], tr_sed_scores[1], tr_doa_er_metric[0], tr_doa_er_metric[1], tr_seld_metric))
-        writer.add_scalar('train/ER', tr_sed_scores[0], batch_idx)
-        writer.add_scalar('train/F_score', tr_sed_scores[1], batch_idx)
-        writer.add_scalar('train/DOA_error', tr_doa_er_metric[0], batch_idx)
-        writer.add_scalar('train/DOA_frame_recall', tr_doa_er_metric[1], batch_idx)
-        writer.add_scalar('train/SELD_error', tr_seld_metric, batch_idx)  
+        writer.add_scalar('train/19-ER', tr_sed_scores[0], batch_idx)
+        writer.add_scalar('train/19-F_score', tr_sed_scores[1], batch_idx)
+        writer.add_scalar('train/19-DOA_error', tr_doa_er_metric[0], batch_idx)
+        writer.add_scalar('train/19-DOA_frame_recall', tr_doa_er_metric[1], batch_idx)
+        writer.add_scalar('train/19-SELD_error', tr_seld_metric, batch_idx)
+
+        # neptune.log_metric('train/19-ER', tr_sed_scores[0], batch_idx)
+        # neptune.log_metric('train/19-F_score', tr_sed_scores[1], batch_idx)
+        # neptune.log_metric('train/19-DOA_error', tr_doa_er_metric[0], batch_idx)
+        # neptune.log_metric('train/19-DOA_frame_recall', tr_doa_er_metric[1], batch_idx)
+        # neptune.log_metric('train/19-SELD_error', tr_seld_metric, batch_idx)
 
         logging.info('Valid ER: {:.3f},  Valid F-score: {:.3f},  Valid DOA error: {:.3f},  Valid DOA frame recall: {:.3f},  Valid SELD error: {:.3f}'.format(
             va_sed_scores[0], va_sed_scores[1], va_doa_er_metric[0], va_doa_er_metric[1], va_seld_metric))
-        writer.add_scalar('valid/ER', va_sed_scores[0], batch_idx)
-        writer.add_scalar('valid/F_score', va_sed_scores[1], batch_idx)
-        writer.add_scalar('valid/DOA_error', va_doa_er_metric[0], batch_idx)
-        writer.add_scalar('valid/DOA_frame_recall', va_doa_er_metric[1], batch_idx)
-        writer.add_scalar('valid/SELD_error', va_seld_metric, batch_idx)
+        writer.add_scalar('valid/19-ER', va_sed_scores[0], batch_idx)
+        writer.add_scalar('valid/19-F_score', va_sed_scores[1], batch_idx)
+        writer.add_scalar('valid/19-DOA_error', va_doa_er_metric[0], batch_idx)
+        writer.add_scalar('valid/19-DOA_frame_recall', va_doa_er_metric[1], batch_idx)
+        writer.add_scalar('valid/19-SELD_error', va_seld_metric, batch_idx)
+
+        # neptune.log_metric('valid/19-ER', va_sed_scores[0], batch_idx)
+        # neptune.log_metric('valid/19-F_score', va_sed_scores[1], batch_idx)
+        # neptune.log_metric('valid/19-DOA_error', va_doa_er_metric[0], batch_idx)
+        # neptune.log_metric('valid/19-DOA_frame_recall', va_doa_er_metric[1], batch_idx)
+        # neptune.log_metric('valid/19-SELD_error', va_seld_metric, batch_idx)
+
+        # 2020 metric #
+        writer.add_scalar('train/20-ER', tr_new_metric[0], batch_idx)
+        writer.add_scalar('train/20-F_score', tr_new_metric[1], batch_idx)
+        writer.add_scalar('train/20-DOA_error', tr_new_metric[2], batch_idx)
+        writer.add_scalar('train/20-DOA_frame_recall', tr_new_metric[3], batch_idx)
+        writer.add_scalar('train/20-SELD_error', tr_new_seld_metric, batch_idx)
+
+        writer.add_scalar('valid/20-ER', va_new_metric[0], batch_idx)
+        writer.add_scalar('valid/20-F_score', va_new_metric[1], batch_idx)
+        writer.add_scalar('valid/20-DOA_error', va_new_metric[2], batch_idx)
+        writer.add_scalar('valid/20-DOA_frame_recall', va_new_metric[3], batch_idx)
+        writer.add_scalar('valid/20-SELD_error', va_new_seld_metric, batch_idx)
+
+        # neptune.log_metric('train/20-ER', tr_new_metric[0], batch_idx)
+        # neptune.log_metric('train/20-F_score', tr_new_metric[1], batch_idx)
+        # neptune.log_metric('train/20-DOA_error', tr_new_metric[2], batch_idx)
+        # neptune.log_metric('train/20-DOA_frame_recall', tr_new_metric[3], batch_idx)
+        # neptune.log_metric('train/20-SELD_error', tr_new_seld_metric, batch_idx)
+
+        # neptune.log_metric('valid/20-ER', va_new_metric[0], batch_idx)
+        # neptune.log_metric('valid/20-F_score', va_new_metric[1], batch_idx)
+        # neptune.log_metric('valid/20-DOA_error', va_new_metric[2], batch_idx)
+        # neptune.log_metric('valid/20-DOA_frame_recall', va_new_metric[3], batch_idx)
+        # neptune.log_metric('valid/20-SELD_error', va_new_seld_metric, batch_idx)
     
     elif data_type == 'test':
 
         [te_loss, te_sed_mAP, te_sed_scores, te_doa_er_metric, 
-            te_seld_metric] = metrics
+            te_seld_metric, te_new_metric, te_new_seld_metric] = metrics
 
         logging.info('Test SELD loss: {:.3f},  Test SED loss: {:.3f},  Test DOA loss: {:.3f},  '
             'Test SED mAP(micro): {:.3f},  Test SED mAP(macro): {:.3f}'.format(
