@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d5bcb95e-3a89-4f09-a0a4-b5ec2f7368a1" name="Default Changelist" comment="ver1" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="hyeom" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="UPDATE_TYPE" value="MERGE" />
+  </component>
+  <component name="ProjectId" id="1c4IAzWmxnklN08ldjUa47gr3x1" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="js.buildTools.gulp.gulp_package_dir" value="" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../seld20" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs.protractor.protractor_package" value="" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.1.main-sed_only">
+    <configuration name="1.main-sed_only" type="PythonConfigurationType" factoryName="Python">
+      <module name="surrey20" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="NEPTUNE_API_TOKEN" value="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vdWkubmVwdHVuZS5haSIsImFwaV91cmwiOiJodHRwczovL3VpLm5lcHR1bmUuYWkiLCJhcGlfa2V5IjoiM2Q3ZTI1ZDYtZWVhNC00MzI2LTgyZGQtOTc3ZGE4NjdmYmMzIn0=" />
+      </envs>
+      <option name="SDK_HOME" value="sftp://ejklektov@143.248.231.24:22/home/ejklektov/.conda/envs/dcase20-3/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <PathMappingSettings>
+        <option name="pathMappings">
+          <list>
+            <mapping local-root="$PROJECT_DIR$" remote-root="/home/ejklektov/dcase20-3/surrey20" />
+          </list>
+        </option>
+      </PathMappingSettings>
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main/main.py" />
+      <option name="PARAMETERS" value="train --workspace=/home/ejklektov/dcase20-3/surrey20 --data_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data --feature_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data/features --feature_type=logmelgccintensity --audio_type=foa&amp;mic --task_type=sed_only --batch_size=32 --max_epochs=40 --lr=1e-3 --reduce_lr=True --model_sed=CRNN9_logmelgccintensity --model_doa=pretrained_CRNN8_logmelgccintensity --fold=-1 --pretrained_epoch=40 --resume_epoch=-1 --data_aug=specaug --seed=30250 --name=BS32_5s --chunklen=5" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="2.feature_extractor-eval" type="PythonConfigurationType" factoryName="Python">
+      <module name="surrey20" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="sftp://ejklektov@143.248.231.33:22/home/ejklektov/.conda/envs/dcase20-3/bin/python3.7" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <PathMappingSettings>
+        <option name="pathMappings">
+          <list>
+            <mapping local-root="/home/ejklektov/dcase20-3/surrey20" remote-root="C:/pycharm/surrey20" />
+          </list>
+        </option>
+      </PathMappingSettings>
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/feature_extractor.py" />
+      <option name="PARAMETERS" value="--dataset_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data/ --feature_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data/features/ --feature_type=logmelgccintensity --data_type=eval --audio_type=foa&amp;mic" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="2.main-doa_only" type="PythonConfigurationType" factoryName="Python">
+      <module name="surrey20" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="sftp://ejklektov@143.248.231.33:22/home/ejklektov/.conda/envs/dcase20-3/bin/python3.7" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <PathMappingSettings>
+        <option name="pathMappings">
+          <list>
+            <mapping local-root="$PROJECT_DIR$" remote-root="/home/ejklektov/dcase20-3/surrey20" />
+          </list>
+        </option>
+      </PathMappingSettings>
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main/main.py" />
+      <option name="PARAMETERS" value="train --workspace=/home/ejklektov/dcase20-3/surrey20 --data_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data --feature_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data/features --feature_type=logmelgccintensity --audio_type=foa&amp;mic --task_type=doa_only --batch_size=32 --max_epochs=80 --lr=1e-3 --reduce_lr=True --model_sed=CRNN9_logmelgccintensity --model_doa=pretrained_CRNN8_logmelgccintensity --fold=-1 --pretrained_epoch=40 --resume_epoch=-1 --data_aug=specaug --seed=30250 --name=BS32_5s --chunklen=5" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="surrey20" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="sftp://ejklektov@143.248.231.33:22/home/ejklektov/.conda/envs/dcase20-3/bin/python3.6" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main/main.py" />
+      <option name="PARAMETERS" value="~/dcase20-3/surrey20" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unnamed" type="ShConfigurationType" nameIsGenerated="true">
+      <option name="SCRIPT_PATH" value="" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INTERPRETER_PATH" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.1.main-sed_only" />
+      <item itemvalue="Python.2.main-doa_only" />
+      <item itemvalue="Python.1.feature_extractor-dev" />
+      <item itemvalue="Python.2.feature_extractor-eval" />
+      <item itemvalue="Shell Script.Unnamed" />
+    </list>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\soundlab\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d5bcb95e-3a89-4f09-a0a4-b5ec2f7368a1" name="Default Changelist" comment="" />
+      <created>1589781299410</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589781299410</updated>
+      <workItem from="1589781302587" duration="154601000" />
+    </task>
+    <task id="LOCAL-00001" summary="interp_tensor =&gt; no need">
+      <created>1590046367768</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1590046367768</updated>
+    </task>
+    <task id="LOCAL-00002" summary="interp_tensor =&gt; no need">
+      <created>1590407799498</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1590407799498</updated>
+    </task>
+    <task id="LOCAL-00003" summary="interp_tensor =&gt; no need">
+      <created>1590482039461</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1590482039461</updated>
+    </task>
+    <task id="LOCAL-00004" summary="ver1">
+      <created>1590843039948</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1590843039948</updated>
+    </task>
+    <task id="LOCAL-00005" summary="ver1">
+      <created>1591077250795</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1591077250795</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="interp_tensor =&gt; no need" />
+    <MESSAGE value="ver1" />
+    <option name="LAST_COMMIT_MESSAGE" value="ver1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="414" y="175" width="1092" height="724" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1590858415634">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="175" width="1092" height="724" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590858415634" />
+    <state x="2334" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751325790" />
+    <state x="740" y="242" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1589789676150">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="242" key="#com.intellij.ide.macro.MacrosDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1589789676150" />
+    <state x="715" y="222" key="#xdebugger.evaluate" timestamp="1590689915228">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="715" y="222" key="#xdebugger.evaluate/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590689915228" />
+    <state x="579" y="113" key="CommitChangelistDialog2" timestamp="1591091671767">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="579" y="113" key="CommitChangelistDialog2/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591091671767" />
+    <state x="184" y="86" key="DiffContextDialog" timestamp="1590045061058">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="184" y="86" key="DiffContextDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590045061058" />
+    <state x="2614" y="281" key="EnvironmentVariablesDialog" timestamp="1590751321944">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2614" y="281" key="EnvironmentVariablesDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751321944" />
+    <state x="268" y="310" key="FileChooserDialogImpl" timestamp="1590565289848">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="268" y="310" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590565289848" />
+    <state x="2188" y="310" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1589809076565" />
+    <state x="829" y="410" key="Github.ShareDialog" timestamp="1590046244579">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="829" y="410" key="Github.ShareDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590046244579" />
+    <state width="1877" height="330" key="GridCell.Tab.-1.bottom" timestamp="1590411774746">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.-1.bottom/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411774746" />
+    <state width="1877" height="330" key="GridCell.Tab.-1.center" timestamp="1590411774746">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.-1.center/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411774746" />
+    <state width="1877" height="330" key="GridCell.Tab.-1.left" timestamp="1590411774746">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.-1.left/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411774746" />
+    <state width="1877" height="330" key="GridCell.Tab.-1.right" timestamp="1590411774746">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.-1.right/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411774746" />
+    <state width="1007" height="280" key="GridCell.Tab.0.bottom" timestamp="1591077241615">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1007" height="280" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241615" />
+    <state width="914" height="280" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751327099" />
+    <state width="1007" height="280" key="GridCell.Tab.0.center" timestamp="1591077241615">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1007" height="280" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241615" />
+    <state width="914" height="280" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751327099" />
+    <state width="1007" height="280" key="GridCell.Tab.0.left" timestamp="1591077241615">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1007" height="280" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241615" />
+    <state width="914" height="280" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751327099" />
+    <state width="1007" height="280" key="GridCell.Tab.0.right" timestamp="1591077241615">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1007" height="280" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241615" />
+    <state width="914" height="280" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751327099" />
+    <state width="869" height="280" key="GridCell.Tab.1.bottom" timestamp="1591077241233">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="869" height="280" key="GridCell.Tab.1.bottom/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241233" />
+    <state width="869" height="280" key="GridCell.Tab.1.center" timestamp="1591077241233">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="869" height="280" key="GridCell.Tab.1.center/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241233" />
+    <state width="869" height="280" key="GridCell.Tab.1.left" timestamp="1591077241233">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="869" height="280" key="GridCell.Tab.1.left/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241233" />
+    <state width="869" height="280" key="GridCell.Tab.1.right" timestamp="1591077241233">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="869" height="280" key="GridCell.Tab.1.right/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1591077241233" />
+    <state width="478" height="225" key="GridCell.Tab.2.bottom" timestamp="1590590583856">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="478" height="225" key="GridCell.Tab.2.bottom/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590590583856" />
+    <state width="478" height="225" key="GridCell.Tab.2.center" timestamp="1590590583856">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="478" height="225" key="GridCell.Tab.2.center/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590590583856" />
+    <state width="478" height="225" key="GridCell.Tab.2.left" timestamp="1590590583856">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="478" height="225" key="GridCell.Tab.2.left/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590590583856" />
+    <state width="478" height="225" key="GridCell.Tab.2.right" timestamp="1590590583856">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="478" height="225" key="GridCell.Tab.2.right/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590590583856" />
+    <state width="647" height="275" key="GridCell.Tab.3.bottom" timestamp="1590411437686">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="647" height="275" key="GridCell.Tab.3.bottom/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411437686" />
+    <state width="647" height="275" key="GridCell.Tab.3.center" timestamp="1590411437686">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="647" height="275" key="GridCell.Tab.3.center/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411437686" />
+    <state width="647" height="275" key="GridCell.Tab.3.left" timestamp="1590411437686">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="647" height="275" key="GridCell.Tab.3.left/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411437686" />
+    <state width="647" height="275" key="GridCell.Tab.3.right" timestamp="1590411437686">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="647" height="275" key="GridCell.Tab.3.right/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411437686" />
+    <state x="806" y="230" key="RollbackChangesDialog" timestamp="1590044770516">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="806" y="230" key="RollbackChangesDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590044770516" />
+    <state x="461" y="162" key="SettingsEditor" timestamp="1590845305166">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="162" key="SettingsEditor/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590845305166" />
+    <state x="2381" y="162" key="SettingsEditor/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751051374" />
+    <state x="231" y="227" key="VCS.ChangeListViewerDialog" timestamp="1590045062289">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="231" y="227" key="VCS.ChangeListViewerDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590045062289" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1590407828847">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590407828847" />
+    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1590857922119">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="968" height="528" key="XDebugger.FullValuePopup/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590857922119" />
+    <state x="764" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589790861481">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="764" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1589790861481" />
+    <state x="520" y="256" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1589811842430">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="520" y="256" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1589811842430" />
+    <state x="701" y="250" width="934" height="540" key="com.jetbrains.plugins.remotesdk.ui.RemoteMappingsConfiguration" timestamp="1590843289068">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="701" y="250" width="934" height="540" key="com.jetbrains.plugins.remotesdk.ui.RemoteMappingsConfiguration/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590843289068" />
+    <state x="-378" y="735" width="1835" height="342" key="dock-window-1" timestamp="1590411245698">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-378" y="735" width="1835" height="342" key="dock-window-1/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411245698" />
+    <state x="-943" y="394" width="663" height="342" key="dock-window-2" timestamp="1590411552798">
+      <screen x="-1080" y="-271" width="1080" height="1880" />
+    </state>
+    <state x="-943" y="394" width="663" height="342" key="dock-window-2/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411552798" />
+    <state x="-943" y="394" width="663" height="342" key="dock-window-3" timestamp="1590411552798">
+      <screen x="-1080" y="-271" width="1080" height="1880" />
+    </state>
+    <state x="-943" y="394" width="663" height="342" key="dock-window-3/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411552798" />
+    <state x="-943" y="394" width="663" height="342" key="dock-window-4" timestamp="1590411552798">
+      <screen x="-1080" y="-271" width="1080" height="1880" />
+    </state>
+    <state x="-943" y="394" width="663" height="342" key="dock-window-4/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590411552798" />
+    <state x="631" y="709" width="494" height="292" key="dock-window-5" timestamp="1590590618021">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="631" y="709" width="494" height="292" key="dock-window-5/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590590618021" />
+    <state x="855" y="250" width="443" height="539" key="ftp.server.browser" timestamp="1590845199620">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="855" y="250" width="443" height="539" key="ftp.server.browser/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590845199620" />
+    <state x="2775" y="250" width="434" height="539" key="ftp.server.browser/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1590751014209" />
+    <state x="284" y="388" key="git4idea.rebase.GitRebaseDialog" timestamp="1590045120382">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="284" y="388" key="git4idea.rebase.GitRebaseDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590045120382" />
+    <state x="2204" y="388" key="git4idea.rebase.GitRebaseDialog/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@1920.0.1920.1040" timestamp="1589807062447" />
+    <state x="783" y="413" key="publish.login" timestamp="1590843597419">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="783" y="413" key="publish.login/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590843597419" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1590737031143">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1040/0.0.1920.1040/-1080.-271.1080.1880@0.0.1920.1040" timestamp="1590737031143" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/metrics/evaluation_metrics.py</url>
+          <line>507</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="azi" language="Python" />
+        <watch expression="self._azi_list" language="Python" />
+        <watch expression="self._azi_list[0]" language="Python" />
+        <watch expression="self._ele_list[0]" language="Python" />
+        <watch expression="self._height" language="Python" />
+        <watch expression="self._length" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/surrey20$1_feature_extractor_dev.coverage" NAME="1.feature_extractor-dev Coverage Results" MODIFIED="1590416997347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
+    <SUITE FILE_PATH="coverage/surrey20$main.coverage" NAME="1.main-sed_only Coverage Results" MODIFIED="1590858523937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
+  </component>
+</project>

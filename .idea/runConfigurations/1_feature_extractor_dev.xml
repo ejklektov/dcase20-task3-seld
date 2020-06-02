@@ -1,0 +1,31 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="1.feature_extractor-dev" type="PythonConfigurationType" factoryName="Python">
+    <module name="surrey20" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    </envs>
+    <option name="SDK_HOME" value="sftp://ejklektov@143.248.231.33:22/home/ejklektov/.conda/envs/dcase20-3/bin/python3.7" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <PathMappingSettings>
+      <option name="pathMappings">
+        <list>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/home/ejklektov/dcase20-3/surrey20" />
+        </list>
+      </option>
+    </PathMappingSettings>
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/feature_extractor.py" />
+    <option name="PARAMETERS" value="--dataset_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data/ --feature_dir=/home/ejklektov/dcase20-3/data/dcase20_seld_data/features/ --feature_type=logmelgccintensity --data_type=dev --audio_type=foa&amp;mic" />
+    <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <option name="MODULE_MODE" value="false" />
+    <option name="REDIRECT_INPUT" value="false" />
+    <option name="INPUT_FILE" value="" />
+    <method v="2" />
+  </configuration>
+</component>
