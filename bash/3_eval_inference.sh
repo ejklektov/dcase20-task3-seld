@@ -2,19 +2,19 @@
 
 # Data directory
 	#DATASET_DIR='/vol/vssp/AP_datasets/audio/dcase2019/task3/dataset_root/'
-DATASET_DIR='../data/dcase20_seld_data/'
+DATASET_DIR='/home/ejklektov/dcase20-3/data/dcase20_seld_data/'
 
 # Feature directory
-FEATURE_DIR='../data/dcase20_seld_data/features/'
+FEATURE_DIR='/home/ejklektov/dcase20-3/data/dcase20_seld_data/features/'
 
 # Workspace
-WORKSPACE='/dcase2020task3/surrey20/'
+WORKSPACE='/home/ejklektov/dcase20-3/surrey20/'
 cd $WORKSPACE
 
 ########### Hyper-parameters ###########
 FEATURE_TYPE='logmelgccintensity'  # 'logmel' | 'logmelgcc' | 'logmelintensity' | 'logmelgccintensity'
 AUDIO_TYPE='foa&mic'                # 'mic' | 'foa' | 'foa&mic'
-FOLD=-1
+FOLD=1
 
 # Chunk length
 CHUNKLEN=5
@@ -33,18 +33,18 @@ NAME='BS32_5s'
 SEED=30250
 
 # GPU number
-GPU_ID=0
+CUDA_VISIBLE_DEVICES=0
 
 ############ Development Evaluation ############
 # test SED first
 FUSION='True'                  # Ensemble or not: 'True' | 'False'
 TASK_TYPE='sed_only'            # 'sed_only' | 'doa_only' | 'two_staged_eval' | 'seld'
 for EPOCH_NUM in {38..40..2}
-    do  
+    do
     echo $'\nEpoch numbers: '$EPOCH_NUM
-    CUDA_VISIBLE_DEVICES=$GPU_ID python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
     --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
-    --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION
+    --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
 done
 
 # ensemble sed on different iterations and write out probabilities
@@ -62,11 +62,11 @@ THRESHOLD=0.5
 FUSION='True'                  # Ensemble or not: 'True' | 'False'
 TASK_TYPE='two_staged_eval'    # 'sed_only' | 'doa_only' | 'two_staged_eval' | 'seld'
 for EPOCH_NUM in {78..80..2}
-    do  
+    do
     echo $'\nEpoch numbers: '$EPOCH_NUM
-    CUDA_VISIBLE_DEVICES=$GPU_ID python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
     --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
-    --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION
+    --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
 done
 
 # ensemble doa

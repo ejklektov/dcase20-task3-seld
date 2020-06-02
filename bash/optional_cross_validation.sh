@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Data directory
-DATASET_DIR='../data/dcase20_seld_data/'
+DATASET_DIR='/home/ejklektov/dcase20-3/data/dcase20_seld_data/'
 
 # Feature directory
-FEATURE_DIR='../data/dcase20_seld_data/features/'
+FEATURE_DIR='/home/ejklektov/dcase20-3/data/dcase20_seld_data/features/'
 
 # Workspace
-WORKSPACE='/dcase2020task3/surrey20/'
+WORKSPACE='/home/ejklektov/dcase20-3/surrey20/'
 cd $WORKSPACE
 
 ########### Hyper-parameters ###########
@@ -34,7 +34,7 @@ NAME='BS32_5s'
 SEED=30220
 
 # GPU number
-GPU_ID=3
+CUDA_VISIBLE_DEVICES=3
 
 ############ Development Evaluation ############
 # test SED first
@@ -46,9 +46,9 @@ for EPOCH_NUM in {38..40..2}
         for FOLD in {1..4}
             do
             echo $'\nFold: '$FOLD
-            CUDA_VISIBLE_DEVICES=$GPU_ID python ${WORKSPACE}main/main.py test --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+            python ${WORKSPACE}main/main.py test --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
             --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --batch_size=$BATCH_SIZE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
-            --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --chunklen=$CHUNKLEN
+            --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --chunklen=$CHUNKLEN --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
         done
         # mv ${WORKSPACE}appendixes/submissions/${NAME}_${MODEL_SED}_${AUDIO_TYPE}_${FEATURE_TYPE}_aug_${DATA_AUG}_seed_${SEED}/_fusion_sed \
         # ${WORKSPACE}appendixes/submissions/${NAME}_${MODEL_SED}_${AUDIO_TYPE}_${FEATURE_TYPE}_aug_${DATA_AUG}_seed_${SEED}/_fusion_sed_epoch_${EPOCH_NUM}
@@ -87,9 +87,9 @@ for EPOCH_NUM in {78..80..2}
         for FOLD in {1..4}
             do
             echo $'\nFold: '$FOLD
-            CUDA_VISIBLE_DEVICES=$GPU_ID python ${WORKSPACE}main/main.py test --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+            python ${WORKSPACE}main/main.py test --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
             --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --batch_size=$BATCH_SIZE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
-            --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --chunklen=$CHUNKLEN
+            --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --chunklen=$CHUNKLEN --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
         done
 done
 

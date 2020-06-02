@@ -2,7 +2,7 @@
 #
 
 
-import os
+import os, pdb
 import numpy as np
 import scipy.io.wavfile as wav
 from sklearn import preprocessing
@@ -71,9 +71,9 @@ class FeatureClass:
             }
 
         self._doa_resolution = 1
-        self._azi_list = range(-180, 180, self._doa_resolution)
+        self._azi_list = range(-180, 181, self._doa_resolution)
         self._length = len(self._azi_list)
-        self._ele_list = range(-90, 90, self._doa_resolution) ##check##
+        self._ele_list = range(-90, 91, self._doa_resolution)
         self._height = len(self._ele_list)
 
         self._audio_max_len_samples = 60 * self._fs  # TODO: Fix the audio synthesis code to always generate 60s of
@@ -82,8 +82,8 @@ class FeatureClass:
         # to be fixed.
 
         # For regression task only
-        self._default_azi = 180
-        self._default_ele = 90
+        self._default_azi = 181
+        self._default_ele = 91
 
         if self._default_azi in self._azi_list:
             print('ERROR: chosen default_azi value {} should not exist in azi_list'.format(self._default_azi))
@@ -128,7 +128,12 @@ class FeatureClass:
     # OUTPUT LABELS
     def read_desc_file(self, desc_filename, in_sec=False):
         desc_file = {
-            'frame': list(), 'class': list(), 'ov': list(), 'azi': list(), 'ele': list()
+            'frame': list(),
+            'class': list(),
+            'ov': list(),
+            'azi': list(),
+            'ele': list(),
+            # 'dist': list()
         }
         fid = open(desc_filename, 'r')
         #next(fid)
@@ -136,9 +141,11 @@ class FeatureClass:
             split_line = line.strip().split(',')
             desc_file['frame'].append(split_line[0])
             desc_file['class'].append(split_line[1])
-            desc_file['ov'].append(split_line[2])
+            desc_file['ov'].append(split_line[2])  # not need
             desc_file['azi'].append(split_line[3])
             desc_file['ele'].append(split_line[4])
+            # desc_file['dist'].append(split_line[5])
+
             # desc_file['class'].append(split_line[0].split('.')[0][:-3])
             #if in_sec:
             #    # return onset-offset time in seconds
@@ -154,14 +161,17 @@ class FeatureClass:
         return desc_file
 
     def get_list_index(self, azi, ele):
-        azi = (azi - self._azi_list[0]) // 10
-        ele = (ele - self._ele_list[0]) // 10
-        return azi * self._height + ele
+        _azi = (azi - self._azi_list[0]) // self._doa_resolution
+        _ele = (ele - self._ele_list[0]) // self._doa_resolution
+        out = _azi * self._height + _ele
+        # out = _azi * self._length + _ele
+        return out
 
     def get_matrix_index(self, ind):
         azi, ele = ind // self._height, ind % self._height
-        azi = (azi * 10 + self._azi_list[0])
-        ele = (ele * 10 + self._ele_list[0])
+        # azi, ele = ind // self._length, ind % self._length
+        azi = (azi * self._doa_resolution + self._azi_list[0])
+        ele = (ele * self._doa_resolution + self._ele_list[0])
         return azi, ele
 
     def _get_doa_labels_regr(self, _desc_file):
@@ -227,8 +237,12 @@ class FeatureClass:
         for i, f in enumerate(_desc_file['frame']) :
             _frame = int(f)
             _class = int(_desc_file['class'][i])
-            _ov = int(_desc_file['ov'][i])
-            _labels[ _frame, _class, _ov ] = 1
+            # _ov = int(_desc_file['ov'][i])
+            _azi = int(_desc_file['azi'][i])
+            _ele = int(_desc_file['ele'][i])
+            _ind = self.get_list_index(_azi, _ele)
+
+            _labels[ _frame, _class, _ind ] = 1
 
         return _labels
 

@@ -91,8 +91,8 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
         ################
         ## Validation
         ################
-        if batch_idx % 3000 == 0:
-        #if batch_idx % batchNum_per_epoch == 0:
+        # if batch_idx % 3000 == 0:
+        if batch_idx % batchNum_per_epoch == 0:
 
             valid_begin_time = timer()
             train_time = valid_begin_time - train_begin_time
@@ -465,7 +465,6 @@ def infer_eval(args, data_generator, logging):
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"]="0"
     parser = argparse.ArgumentParser(description='DCASE2019 task3')
 
     subparsers = parser.add_subparsers(dest='mode')
@@ -503,6 +502,8 @@ if __name__ == '__main__':
                                 help='random seed')
     parser_train.add_argument('--name', default='n0', type=str)
     parser_train.add_argument('--chunklen', default=3., type=float)
+    parser_train.add_argument('--CUDA_VISIBLE_DEVICES', type=str, default='none',
+                                help='limit gpu number')
 
     parser_test = subparsers.add_parser('test')
     parser_test.add_argument('--workspace', type=str, required=True,
@@ -550,7 +551,9 @@ if __name__ == '__main__':
                                 help='random seed')
     parser_test_all.add_argument('--name', default='n0', type=str)
     parser_test_all.add_argument('--fusion', type=str2bool, default=False,
-                                help='Ensemble or not')   
+                                help='Ensemble or not')
+    parser_test_all.add_argument('--CUDA_VISIBLE_DEVICES', type=str, default='none',
+                                help='limit gpu number')
 
     parser_infer_eval = subparsers.add_parser('infer_eval')
     parser_infer_eval.add_argument('--workspace', type=str, required=True,
@@ -577,10 +580,17 @@ if __name__ == '__main__':
                                 help='random seed')
     parser_infer_eval.add_argument('--name', default='n0', type=str)
     parser_infer_eval.add_argument('--fusion', type=str2bool, default=False,
-                                help='Ensemble or not')   
+                                help='Ensemble or not')
+    parser_infer_eval.add_argument('--CUDA_VISIBLE_DEVICES', type=str, default='none',
+                                help='limit gpu number')
 
 
     args = parser.parse_args()
+
+    if 'none' in args.CUDA_VISIBLE_DEVICES :
+        os.environ["CUDA_VISIBLE_DEVICES"]="4"
+    else :
+        os.environ["CUDA_VISIBLE_DEVICES"]=args.CUDA_VISIBLE_DEVICES
 
     # import neptune
     # neptune.init('hyeom/dcase20-task3')

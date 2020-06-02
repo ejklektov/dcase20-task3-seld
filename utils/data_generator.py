@@ -411,15 +411,17 @@ class DevDataGenerator20(DevDataGenerator19):
             feature = hf['feature'][:]                  # float
             frame = hf['target']['frame'][:]            # float
             event = hf['target']['event'][:]            # float
-            track_idx = hf['target']['track_idx'][:]    # float
+            # ov = hf['target']['ov'][:]    # float
             azimuth = hf['target']['azimuth'][:]        # float
             elevation = hf['target']['elevation'][:]    # float
+            distance = hf['target']['distance'][:]    # float
         
         frame_num = feature.shape[1]
         target_event = np.zeros((frame_num, self.class_num))
         target_ele = np.zeros((frame_num, self.class_num))
         target_azi = np.zeros((frame_num, self.class_num))
-        target_track_idx = np.zeros((frame_num, self.class_num))
+        # target_ov = np.zeros((frame_num, self.class_num))
+        target_dist = np.zeros((frame_num, self.class_num))
         
         #for n in range(frame_num):
         #pdb.set_trace()
@@ -429,11 +431,12 @@ class DevDataGenerator20(DevDataGenerator19):
             target_event[f][e] = 1.0
             target_ele[f][e] = elevation[i] * np.pi / 180.0
             target_azi[f][e] = azimuth[i] * np.pi / 180.0
-            target_track_idx[f][e] = track_idx[i] * 1.0
+            # target_ov[f][e] = ov[i] * 1.0
+            target_dist[f][e] = distance[i] # 1.0 (fixed)
 
         target_doa = np.concatenate((target_azi, target_ele), axis=-1)
 
-        return feature, target_event, target_doa, target_track_idx
+        return feature, target_event, target_doa, target_dist
 
 
 class EvalDataGenerator20(EvalDataGenerator19):

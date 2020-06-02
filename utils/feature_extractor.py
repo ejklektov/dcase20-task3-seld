@@ -465,25 +465,17 @@ def extract_dev_features(args):
             #    hf['target'].create_dataset('distance', data=target_dist, dtype=np.float32)    
             #
             #tqdm.write('{}, {}, {}'.format(audio_count, hdf5_path, feature.shape))
-            
-            
-            #with open(os.path.join(meta_dir, meta_fn)) as csvfile :
-            #    reader = csv.reader(csvfile, delimiter=' ')
-            #    for row in reader :
-            #        target_frame = row[0]
-            #        target_event = row[1]
-            #        target_track_idx = row[2]
-            #        target_azimuth = row[3]
-            #        target_elevation = row[4]
+
             df = pd.read_csv(os.path.join(meta_dir, meta_fn), index_col=False, header=None)
 
             #pdb.set_trace()
 
             target_frame = df[0].values
             target_event = df[1].values
-            target_track_idx = df[2].values
+            target_ov = df[2].values
             target_azi = df[3].values
             target_ele = df[4].values
+            target_dist = (target_ov * 0) + 1 # make distance 1 (same)
 
             #print('frame :',frame)
             
@@ -496,9 +488,10 @@ def extract_dev_features(args):
                 hf.create_group('target')
                 hf['target'].create_dataset('frame', data=target_frame, dtype=np.float32)
                 hf['target'].create_dataset('event', data=target_event, dtype=np.float32)
-                hf['target'].create_dataset('track_idx', data=target_track_idx, dtype=np.float32)
+                hf['target'].create_dataset('ov', data=target_ov, dtype=np.float32)
                 hf['target'].create_dataset('azimuth', data=target_azi, dtype=np.float32)
                 hf['target'].create_dataset('elevation', data=target_ele, dtype=np.float32)
+                hf['target'].create_dataset('distance', data=target_dist, dtype=np.float32)
 
             tqdm.write('{}, {}, {}'.format(audio_count, hdf5_path, feature.shape))
 
