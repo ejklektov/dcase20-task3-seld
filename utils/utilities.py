@@ -28,9 +28,12 @@ doa_labels = list(itertools.product(*doa))
 doa_to_ix = {doa: i for i, doa in enumerate(doa_labels)}
 ix_to_doa = {i: doa for i, doa in enumerate(doa_labels)}
 
-train_splits_dict = {1: [3,4,5,6], -1: [1,2,3,4,5,6]}
-valid_split_dict = {1: [2], -1: []}
-test_split_dict = {1: [1], -1: []}
+train_splits_dict = {-2: [3,4,5,6], -1: [1,2,3,4,5,6],
+                    1: [2,3,4,5,6], 2: [1,3,4,5,6], 3: [1,2,4,5,6], 4: [1,2,3,5,6], 5: [1,2,3,4,6], 6: [1,2,3,4,5]}
+valid_split_dict = {-2: [2],        -1: [],
+                    1: [1],         2: [2],         3: [3],         4: [4],         5: [5],         6: [6]}
+test_split_dict = {-2: [1],         -1: [],
+                    1: [1],         2: [2],         3: [3],         4: [4],         5: [5],         6: [6]}
 
 
 def get_doas(indexes):

@@ -14,7 +14,7 @@ cd $WORKSPACE
 ########### Hyper-parameters ###########
 FEATURE_TYPE='logmelgccintensity'  # 'logmel' | 'logmelgcc' | 'logmelintensity' | 'logmelgccintensity'
 AUDIO_TYPE='foa&mic'                # 'mic' | 'foa' | 'foa&mic'
-FOLD=1
+FOLD=-2
 
 # Chunk length
 CHUNKLEN=5
@@ -24,7 +24,7 @@ MODEL_SED='CRNN9_logmelgccintensity'              # 'CRNN11' | 'CRNN9' | 'Gated_
 MODEL_DOA='pretrained_CRNN8_logmelgccintensity'   # 'pretrained_CRNN10' | 'pretrained_CRNN8' | 'pretrained_Gated_CRNN8' | 'pretrained_CRNN8_logmelgccintensity' | 'pretrained_CRNN10_logmelgccintensity'
 
 # Data augmentation
-DATA_AUG='None'                 # 'None' | 'mixup' | 'specaug' | 'mixup&specaug'
+DATA_AUG='mixup&specaug'                 # 'None' | 'mixup' | 'specaug' | 'mixup&specaug'
 
 # Name of the trial
 NAME='BS32_5s'
@@ -33,7 +33,7 @@ NAME='BS32_5s'
 SEED=30250
 
 # GPU number
-CUDA_VISIBLE_DEVICES=0
+CUDA_VISIBLE_DEVICES=7
 
 ############ Development Evaluation ############
 # test SED first
@@ -42,7 +42,7 @@ TASK_TYPE='sed_only'            # 'sed_only' | 'doa_only' | 'two_staged_eval' | 
 for EPOCH_NUM in {38..40..2}
     do
     echo $'\nEpoch numbers: '$EPOCH_NUM
-    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --data_dir=$DATASET_DIR --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
     --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
     --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
 done
@@ -64,7 +64,7 @@ TASK_TYPE='two_staged_eval'    # 'sed_only' | 'doa_only' | 'two_staged_eval' | '
 for EPOCH_NUM in {78..80..2}
     do
     echo $'\nEpoch numbers: '$EPOCH_NUM
-    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --data_dir=$DATASET_DIR --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
     --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
     --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
 done

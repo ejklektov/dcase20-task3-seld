@@ -9,25 +9,28 @@ from models.model_utilities import ConvBlock, init_gru, init_layer, interpolate
 
 
 class CRNN9(nn.Module):
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
-        
+    #def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
+    def __init__(self, class_num, pretrained_path=None, args=None):
+
         super().__init__()
 
         self.class_num = class_num
-        self.pool_type = pool_type
-        self.pool_size = pool_size
+        self.pool_type = args.model_pool_type
+        self.pool_size = args.model_pool_size
         self.interp_ratio = 8
+        inp_dict = {'logmel':7, 'logmelgcc':7, 'logmelintensity':7, 'logmelgccintensity':17}
+        self.inp_chs = inp_dict[args.feature_type]
         
-        self.conv_block1 = ConvBlock(in_channels=7, out_channels=128)    # 1: 7, 128     2: 7, 64
+        self.conv_block1 = ConvBlock(in_channels=inp_dict, out_channels=128)    # 1: 7, 128     2: 7, 64
         self.conv_block2 = ConvBlock(in_channels=128, out_channels=256)  # 1: 128, 256   2: 64, 256
         self.conv_block3 = ConvBlock(in_channels=256, out_channels=512)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=2, dropout=0.3, batch_first=True, bidirectional=True)
 
-        self.event_fc = nn.Linear(512, class_num, bias=True)
-        self.azimuth_fc = nn.Linear(512, class_num, bias=True)
-        self.elevation_fc = nn.Linear(512, class_num, bias=True)
+        self.event_fc = nn.Linear(args.model_gru_size*2 , class_num, bias=True) # *2 : because GRU is bidirectional
+        self.azimuth_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
+        self.elevation_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
 
         self.init_weights()
 
@@ -40,6 +43,7 @@ class CRNN9(nn.Module):
 
     def forward(self, x):
         '''input: (batch_size, mic_channels, time_steps, mel_bins)'''
+        print("tmp =========> ")
 
         x = self.conv_block1(x, self.pool_type, pool_size=self.pool_size)
         x = self.conv_block2(x, self.pool_type, pool_size=self.pool_size)
@@ -78,14 +82,14 @@ class CRNN9(nn.Module):
 
 class pretrained_CRNN8(CRNN9):
 
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
-
-        super().__init__(class_num, pool_type, pool_size, pretrained_path=pretrained_path)
+    def __init__(self, class_num, pretrained_path=None, args=None):
+        self.args = args
+        super().__init__(class_num, pretrained_path=pretrained_path, args=args)
         
         if pretrained_path:
             self.load_weights(pretrained_path)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=1, batch_first=True, bidirectional=True)
 
         init_gru(self.gru)
@@ -95,7 +99,7 @@ class pretrained_CRNN8(CRNN9):
 
     def load_weights(self, pretrained_path):
 
-        model = CRNN9(self.class_num, self.pool_type, self.pool_size)
+        model = CRNN9(self.class_num, args=self.args)
         checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
         model.load_state_dict(checkpoint['model_state_dict'])
 
@@ -105,25 +109,25 @@ class pretrained_CRNN8(CRNN9):
 
 
 class CRNN9_logmelgccintensity(nn.Module):
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
+    def __init__(self, class_num, pretrained_path=None, args=None):
         
         super().__init__()
 
         self.class_num = class_num
-        self.pool_type = pool_type
-        self.pool_size = pool_size
+        self.pool_type = args.model_pool_type
+        self.pool_size = args.model_pool_size
         self.interp_ratio = 8
         
         self.conv_block1 = ConvBlock(in_channels=17, out_channels=128)    # 1: 7, 128     2: 7, 64
         self.conv_block2 = ConvBlock(in_channels=128, out_channels=256)  # 1: 128, 256   2: 64, 256
         self.conv_block3 = ConvBlock(in_channels=256, out_channels=512)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=2, dropout=0.3, batch_first=True, bidirectional=True)
 
-        self.event_fc = nn.Linear(512, class_num, bias=True)
-        self.azimuth_fc = nn.Linear(512, class_num, bias=True)
-        self.elevation_fc = nn.Linear(512, class_num, bias=True)
+        self.event_fc = nn.Linear(args.model_gru_size*2 , class_num, bias=True) # *2 : because GRU is bidirectional
+        self.azimuth_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
+        self.elevation_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
 
         self.init_weights()
 
@@ -174,14 +178,14 @@ class CRNN9_logmelgccintensity(nn.Module):
 
 class pretrained_CRNN8_logmelgccintensity(CRNN9_logmelgccintensity):
 
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
-
-        super().__init__(class_num, pool_type, pool_size, pretrained_path=pretrained_path)
+    def __init__(self, class_num, pretrained_path=None, args=None):
+        self.args = args
+        super().__init__(class_num, pretrained_path=pretrained_path, args=args)
         
         if pretrained_path:
             self.load_weights(pretrained_path)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=1, batch_first=True, bidirectional=True)
 
         init_gru(self.gru)
@@ -191,23 +195,57 @@ class pretrained_CRNN8_logmelgccintensity(CRNN9_logmelgccintensity):
 
     def load_weights(self, pretrained_path):
 
-        model = CRNN9_logmelgccintensity(self.class_num, self.pool_type, self.pool_size)
+        # 1. orgin #
+        # model = CRNN9_logmelgccintensity(self.class_num, args=self.args)
+        # checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
+        # model.load_state_dict(checkpoint['model_state_dict'])
+        #
+        # self.conv_block1 = model.conv_block1
+        # self.conv_block2 = model.conv_block2
+        # self.conv_block3 = model.conv_block3
+
+        # 2. second trial #
+        # model = CRNN9_logmelgccintensity(self.class_num, args=self.args)
+        # checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
+        # model.conv_block1.load_state_dict(checkpoint['model_state_dict'].conv_block1)
+        # model.conv_block2.load_state_dict(checkpoint['model_state_dict'].conv_block2)
+        # model.conv_block3.load_state_dict(checkpoint['model_state_dict'].conv_block3)
+        #
+        # self.conv_block1 = model.conv_block1
+        # self.conv_block2 = model.conv_block2
+        # self.conv_block3 = model.conv_block3
+
+        # 3. third trial #
+        model = CRNN9_logmelgccintensity(self.class_num, args=self.args)
         checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
-        model.load_state_dict(checkpoint['model_state_dict'])
+
+        pretrained_dict = checkpoint['model_state_dict']
+        model_dict = model.state_dict()
+
+        # filter out unnecessary keys #
+        pretrained_dict = {k: v for k, v in pretrained_dict.items()
+                           if (k in model_dict) and
+                           (v.size()==model_dict[k].size()) and
+                           (("gru" not in k) or ("_fc" not in k))
+                           }
+        # overwrite entries in the existing state dict #
+        model_dict.update(pretrained_dict)
+        # load the new state dict #
+        self.load_state_dict(model_dict)
 
         self.conv_block1 = model.conv_block1
         self.conv_block2 = model.conv_block2
         self.conv_block3 = model.conv_block3
-
+        
 
 class CRNN11(nn.Module):
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
+    def __init__(self, class_num, pretrained_path=None, args=None):
         
         super().__init__()
 
         self.class_num = class_num
-        self.pool_type = pool_type
-        self.pool_size = pool_size
+        self.pool_type = args.model_pool_type
+        self.pool_size = args.model_pool_size
         self.interp_ratio = 16
         
         self.conv_block1 = ConvBlock(in_channels=7, out_channels=64)
@@ -215,12 +253,12 @@ class CRNN11(nn.Module):
         self.conv_block3 = ConvBlock(in_channels=128, out_channels=256)
         self.conv_block4 = ConvBlock(in_channels=256, out_channels=512)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=2, dropout=0.3, batch_first=True, bidirectional=True)
 
-        self.event_fc = nn.Linear(512, class_num, bias=True)
-        self.azimuth_fc = nn.Linear(512, class_num, bias=True)
-        self.elevation_fc = nn.Linear(512, class_num, bias=True)
+        self.event_fc = nn.Linear(args.model_gru_size*2 , class_num, bias=True) # *2 : because GRU is bidirectional
+        self.azimuth_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
+        self.elevation_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
 
         self.init_weights()
 
@@ -272,14 +310,14 @@ class CRNN11(nn.Module):
 
 class pretrained_CRNN10(CRNN11):
 
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
-
-        super().__init__(class_num, pool_type, pool_size, pretrained_path=pretrained_path)
+    def __init__(self, class_num, pretrained_path=None, args=None):
+        self.args = args
+        super().__init__(class_num, pretrained_path=pretrained_path, args=args)
         
         if pretrained_path:
             self.load_weights(pretrained_path)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=1, batch_first=True, bidirectional=True)
 
         init_gru(self.gru)
@@ -289,7 +327,7 @@ class pretrained_CRNN10(CRNN11):
 
     def load_weights(self, pretrained_path):
 
-        model = CRNN11(self.class_num, self.pool_type, self.pool_size)
+        model = CRNN11(self.class_num, args=self.args)
         checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
         model.load_state_dict(checkpoint['model_state_dict'])
 
@@ -300,13 +338,13 @@ class pretrained_CRNN10(CRNN11):
 
 
 class CRNN11_logmelgccintensity(nn.Module):
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
+    def __init__(self, class_num, pretrained_path=None, args=None):
         
         super().__init__()
 
         self.class_num = class_num
-        self.pool_type = pool_type
-        self.pool_size = pool_size
+        self.pool_type = args.model_pool_type
+        self.pool_size = args.model_pool_size
         self.interp_ratio = 16
         
         self.conv_block1 = ConvBlock(in_channels=17, out_channels=64)
@@ -314,12 +352,12 @@ class CRNN11_logmelgccintensity(nn.Module):
         self.conv_block3 = ConvBlock(in_channels=128, out_channels=256)
         self.conv_block4 = ConvBlock(in_channels=256, out_channels=512)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=2, dropout=0.3, batch_first=True, bidirectional=True)
 
-        self.event_fc = nn.Linear(512, class_num, bias=True)
-        self.azimuth_fc = nn.Linear(512, class_num, bias=True)
-        self.elevation_fc = nn.Linear(512, class_num, bias=True)
+        self.event_fc = nn.Linear(args.model_gru_size*2 , class_num, bias=True) # *2 : because GRU is bidirectional
+        self.azimuth_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
+        self.elevation_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
 
         self.init_weights()
 
@@ -371,14 +409,14 @@ class CRNN11_logmelgccintensity(nn.Module):
 
 class pretrained_CRNN10_logmelgccintensity(CRNN11_logmelgccintensity):
 
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
-
-        super().__init__(class_num, pool_type, pool_size, pretrained_path=pretrained_path)
+    def __init__(self, class_num, pretrained_path=None, args=None):
+        self.args = args
+        super().__init__(class_num, pretrained_path=pretrained_path, args=args)
         
         if pretrained_path:
             self.load_weights(pretrained_path)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=1, batch_first=True, bidirectional=True)
 
         init_gru(self.gru)
@@ -388,7 +426,7 @@ class pretrained_CRNN10_logmelgccintensity(CRNN11_logmelgccintensity):
 
     def load_weights(self, pretrained_path):
 
-        model = CRNN11_logmelgccintensity(self.class_num, self.pool_type, self.pool_size)
+        model = CRNN11_logmelgccintensity(self.class_num, args=self.args)
         checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
         model.load_state_dict(checkpoint['model_state_dict'])
 
@@ -399,13 +437,13 @@ class pretrained_CRNN10_logmelgccintensity(CRNN11_logmelgccintensity):
 
 
 class Gated_CRNN9(nn.Module):
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
+    def __init__(self, class_num, pretrained_path=None, args=None):
         
         super().__init__()
 
         self.class_num = class_num
-        self.pool_type = pool_type
-        self.pool_size = pool_size
+        self.pool_type = args.model_pool_type
+        self.pool_size = args.model_pool_size
         self.interp_ratio = 8
         
         self.conv_block1 = ConvBlock(in_channels=7, out_channels=64)    # 1: 7, 128     2: 7, 64
@@ -416,12 +454,12 @@ class Gated_CRNN9(nn.Module):
         self.gate_block2 = ConvBlock(in_channels=64, out_channels=256)
         self.gate_block3 = ConvBlock(in_channels=256, out_channels=512)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=2, dropout=0.3, batch_first=True, bidirectional=True)
 
-        self.event_fc = nn.Linear(512, class_num, bias=True)
-        self.azimuth_fc = nn.Linear(512, class_num, bias=True)
-        self.elevation_fc = nn.Linear(512, class_num, bias=True)
+        self.event_fc = nn.Linear(args.model_gru_size*2 , class_num, bias=True) # *2 : because GRU is bidirectional
+        self.azimuth_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
+        self.elevation_fc = nn.Linear(args.model_gru_size*2, class_num, bias=True)
 
         self.init_weights()
 
@@ -479,14 +517,14 @@ class Gated_CRNN9(nn.Module):
 
 class pretrained_Gated_CRNN8(Gated_CRNN9):
 
-    def __init__(self, class_num, pool_type='avg', pool_size=(2,2), pretrained_path=None):
-
-        super().__init__(class_num, pool_type, pool_size, pretrained_path=pretrained_path)
+    def __init__(self, class_num, pretrained_path=None, args=None):
+        self.args= args
+        super().__init__(class_num, pretrained_path=pretrained_path, args=args)
         
         if pretrained_path:
             self.load_weights(pretrained_path)
 
-        self.gru = nn.GRU(input_size=512, hidden_size=256, 
+        self.gru = nn.GRU(input_size=512, hidden_size=args.model_gru_size,
             num_layers=1, batch_first=True, bidirectional=True)
 
         init_gru(self.gru)
@@ -496,7 +534,7 @@ class pretrained_Gated_CRNN8(Gated_CRNN9):
 
     def load_weights(self, pretrained_path):
 
-        model = Gated_CRNN9(self.class_num, self.pool_type, self.pool_size)
+        model = Gated_CRNN9(self.class_num, args=self.args)
         checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
         model.load_state_dict(checkpoint['model_state_dict'])
 

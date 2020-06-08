@@ -13,7 +13,7 @@ cd $WORKSPACE
 ########### Hyper-parameters ###########
 FEATURE_TYPE='logmelgccintensity'  # 'logmel' | 'logmelgcc' | 'logmelintensity' | 'logmelgccintensity'
 AUDIO_TYPE='foa&mic'                # 'mic' | 'foa' | 'foa&mic'
-FOLD=1
+FOLD=-2
 
 # Chunk length
 CHUNKLEN=5
@@ -63,7 +63,7 @@ TASK_TYPE='two_staged_eval'    # 'sed_only' | 'doa_only' | 'two_staged_eval' | '
 for EPOCH_NUM in {78..80..2}
     do
     echo $'\nEpoch numbers: '$EPOCH_NUM
-    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+    python ${WORKSPACE}main/main.py infer_eval --workspace=$WORKSPACE --data_dir=$DATASET_DIR --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
     --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
     --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
 done

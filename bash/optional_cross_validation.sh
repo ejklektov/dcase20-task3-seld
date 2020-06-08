@@ -87,7 +87,7 @@ for EPOCH_NUM in {78..80..2}
         for FOLD in {1..4}
             do
             echo $'\nFold: '$FOLD
-            python ${WORKSPACE}main/main.py test --workspace=$WORKSPACE --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
+            python ${WORKSPACE}main/main.py test --workspace=$WORKSPACE --data_dir=$DATASET_DIR --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
             --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --batch_size=$BATCH_SIZE --model_sed=$MODEL_SED --model_doa=$MODEL_DOA --fold=$FOLD --epoch_num=$EPOCH_NUM \
             --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --fusion=$FUSION --chunklen=$CHUNKLEN --CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
         done

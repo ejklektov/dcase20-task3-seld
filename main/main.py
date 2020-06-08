@@ -70,6 +70,7 @@ def train(args, data_generator, model, optimizer, initial_epoch, logging):
             '_fold_{}'.format(args.fold) + '_seed_{}'.format(args.seed), current_time + '_' + socket.gethostname())
     writer = SummaryWriter(log_dir=tb_dir)
     writer.add_text('Parameters', str(args))
+    writer.add_text('name', str(args.name))
 
     temp_submissions_dir_train = os.path.join(temp_submissions_trial_dir, 'train')
     temp_submissions_dir_valid = os.path.join(temp_submissions_trial_dir, 'valid')
@@ -246,7 +247,7 @@ def test(args, data_generator, logging):
                             args.model + '_{}'.format(args.audio_type) + '_{}'.format(args.feature_type) + '_aug_{}'.format(args.data_aug) + 
                             '_fold_{}'.format(args.fold) + '_seed_{}'.format(args.seed), 'epoch_{}.pth'.format(args.epoch_num))
     assert os.path.exists(model_path), 'Error: no checkpoint file found!'
-    model = models.__dict__[args.model](class_num, args.model_pool_type, args.model_pool_size, None)
+    model = models.__dict__[args.model](class_num, None, args)
     checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
     model.load_state_dict(checkpoint['model_state_dict'])
     if args.cuda:
@@ -352,9 +353,9 @@ def infer_eval(args, data_generator, logging):
     # Load model
     model_path = os.path.join(models_dir, task_type, args.name + '_' + 
                             args.model + '_{}'.format(args.audio_type) + '_{}'.format(args.feature_type) + '_aug_{}'.format(args.data_aug) + 
-                            '_fold_-1' + '_seed_{}'.format(args.seed), 'epoch_{}.pth'.format(args.epoch_num))
+                            '_fold_{}'.format(args.fold) + '_seed_{}'.format(args.seed), 'epoch_{}.pth'.format(args.epoch_num))
     assert os.path.exists(model_path), 'Error: no checkpoint file found!'
-    model = models.__dict__[args.model](class_num, args.model_pool_type, args.model_pool_size, None)
+    model = models.__dict__[args.model](class_num, None, args)
     checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
     model.load_state_dict(checkpoint['model_state_dict'])
     if args.cuda:
@@ -504,6 +505,11 @@ if __name__ == '__main__':
     parser_train.add_argument('--chunklen', default=3., type=float)
     parser_train.add_argument('--CUDA_VISIBLE_DEVICES', type=str, default='none',
                                 help='limit gpu number')
+    # parser_train.add_argument('--model_fc_size', type=int, default=512)
+    parser_train.add_argument('--model_gru_size', type=int, default=256)
+    parser_train.add_argument('--model_pool_type', type=str, default='avg')
+    parser_train.add_argument('--model_pool_size', type=int, default=2)
+
 
     parser_test = subparsers.add_parser('test')
     parser_test.add_argument('--workspace', type=str, required=True,
@@ -533,6 +539,12 @@ if __name__ == '__main__':
     parser_test.add_argument('--fusion', type=str2bool, default=False,
                                 help='Ensemble or not')
     parser_test.add_argument('--chunklen', default=3., type=float)
+    parser_test.add_argument('--CUDA_VISIBLE_DEVICES', type=str, default='none',
+                                help='limit gpu number')
+    # parser_test.add_argument('--model_fc_size', type=int, default=512)
+    parser_test.add_argument('--model_gru_size', type=int, default=256)
+    parser_test.add_argument('--model_pool_type', type=str, default='avg')
+    parser_test.add_argument('--model_pool_size', type=int, default=2)
 
     parser_test_all = subparsers.add_parser('test_all')
     parser_test_all.add_argument('--workspace', type=str, required=True,
@@ -554,6 +566,10 @@ if __name__ == '__main__':
                                 help='Ensemble or not')
     parser_test_all.add_argument('--CUDA_VISIBLE_DEVICES', type=str, default='none',
                                 help='limit gpu number')
+    # parser_test_all.add_argument('--model_fc_size', type=int, default=512)
+    parser_test_all.add_argument('--model_gru_size', type=int, default=256)
+    parser_test_all.add_argument('--model_pool_type', type=str, default='avg')
+    parser_test_all.add_argument('--model_pool_size', type=int, default=2)
 
     parser_infer_eval = subparsers.add_parser('infer_eval')
     parser_infer_eval.add_argument('--workspace', type=str, required=True,
@@ -583,12 +599,15 @@ if __name__ == '__main__':
                                 help='Ensemble or not')
     parser_infer_eval.add_argument('--CUDA_VISIBLE_DEVICES', type=str, default='none',
                                 help='limit gpu number')
-
+    # parser_infer_eval.add_argument('--model_fc_size', type=int, default=512)
+    parser_infer_eval.add_argument('--model_gru_size', type=int, default=256)
+    parser_infer_eval.add_argument('--model_pool_type', type=str, default='avg')
+    parser_infer_eval.add_argument('--model_pool_size', type=int, default=2)
 
     args = parser.parse_args()
 
     if 'none' in args.CUDA_VISIBLE_DEVICES :
-        os.environ["CUDA_VISIBLE_DEVICES"]="4"
+        os.environ["CUDA_VISIBLE_DEVICES"]="7"
     else :
         os.environ["CUDA_VISIBLE_DEVICES"]=args.CUDA_VISIBLE_DEVICES
 
@@ -623,8 +642,8 @@ if __name__ == '__main__':
         args.model = args.model_sed
     elif args.task_type == 'doa_only' or args.task_type == 'two_staged_eval':
         args.model = args.model_doa
-    args.model_pool_type = model_pool_type
-    args.model_pool_size = model_pool_size
+    #args.model_pool_type = model_pool_type
+    #args.model_pool_size = model_pool_size
     args.loss_type = loss_type
 
     class_num = len(event_labels)
@@ -696,8 +715,7 @@ if __name__ == '__main__':
             assert os.path.exists(resume_model_path), 'Error: no checkpoint file found!'
             checkpoint = torch.load(resume_model_path, map_location=lambda storage, loc: storage)
 
-            model = models.__dict__[args.model](class_num, args.model_pool_type, 
-                args.model_pool_size, None)
+            model = models.__dict__[args.model](class_num, None, args)
             model.load_state_dict(checkpoint['model_state_dict'])
             if args.cuda:
                 model, Multi_GPU = move_model_to_gpu(model) # It is important to move the model to gpu first and then construct optimizer
@@ -719,8 +737,7 @@ if __name__ == '__main__':
                                         args.model_sed + '_{}'.format(args.audio_type) + '_{}'.format(args.feature_type) + '_aug_{}'.format(args.data_aug) + 
                                         '_fold_{}'.format(args.fold) + '_seed_{}'.format(args.seed), 'epoch_{}.pth'.format(args.pretrained_epoch))
 
-            model = models.__dict__[args.model](class_num, args.model_pool_type, 
-                args.model_pool_size, pretrained_path)
+            model = models.__dict__[args.model](class_num, pretrained_path, args)
             if args.cuda:
                 model, Multi_GPU = move_model_to_gpu(model) # It is important to move the model to gpu first and then construct optimizer
 

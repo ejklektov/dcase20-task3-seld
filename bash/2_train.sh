@@ -11,9 +11,9 @@ WORKSPACE='/home/ejklektov/dcase20-3/surrey20/'
 cd $WORKSPACE
 
 ########### Hyper-parameters ###########
-FEATURE_TYPE='logmelgccintensity'   # 'logmel' | 'logmelgcc' | 'logmelintensity' | 'logmelgccintensity'
+FEATURE_TYPE='logmelgccintensity'   # 'logmel' | 'logmelgcc' | 'logmelintensity' | 'logmelgccintensity'(17dim)
 AUDIO_TYPE='foa&mic'                # 'mic' | 'foa' | 'foa&mic'
-FOLD=1                              # 1-4 for folds in dev set, -1 for eval sets
+FOLD=-2                              # 1-4 for folds in dev set, -1 for eval sets
 
 # Batch size, max epochs, learning rate
 BATCH_SIZE=32
@@ -34,13 +34,13 @@ LR=1e-3
 REDUCE_LR='True'
 
 # Name of the trial
-NAME='BS32_5s' # 'n0' | 'test'
+NAME='BS32_5s'                  # 'n0' | 'test'
 
 # seed
 SEED=30250
 
 # GPU number
-CUDA_VISIBLE_DEVICES="6,7"
+CUDA_VISIBLE_DEVICES="4"
 
 ############ Development ############
 ## train
@@ -48,11 +48,16 @@ CUDA_VISIBLE_DEVICES="6,7"
 TASK_TYPE='sed_only'            # 'sed_only' | 'doa_only' | 'two_staged_eval' | 'seld'
 MAX_EPOCHS=40
 RESUME_EPOCH=-1                  # resume training, -1 for train from scratch, positive integer for resuming the epoch from
+SED_FC_SIZE=512
+SED_GRU_SIZE=256
+DOA_FC_SIZE=512 # it should be same as SED_FC_SIZE
+DOA_GRU_SIZE=256
+NAME="${NAME}_sedgru${SED_GRU_SIZE}_doagru${DOA_GRU_SIZE}"
 
 python3 ${WORKSPACE}main/main.py train --workspace=$WORKSPACE --data_dir $DATASET_DIR --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
 --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --batch_size=$BATCH_SIZE --max_epochs=$MAX_EPOCHS --lr=$LR --reduce_lr=$REDUCE_LR --model_sed=$MODEL_SED \
 --model_doa=$MODEL_DOA --fold=$FOLD --pretrained_epoch=$PRETRAINED_EPOCH --resume_epoch=$RESUME_EPOCH --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --chunklen=$CHUNKLEN \
---CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
+--CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES --model_gru_size $SED_GRU_SIZE
 
 # DOA
 TASK_TYPE='doa_only'            # 'sed_only' | 'doa_only' | 'two_staged_eval' | 'seld'
@@ -62,5 +67,5 @@ RESUME_EPOCH=-1                  # resume training, -1 for train from scratch, p
 python3 ${WORKSPACE}main/main.py train --workspace=$WORKSPACE --data_dir $DATASET_DIR --feature_dir=$FEATURE_DIR --feature_type=$FEATURE_TYPE \
 --audio_type=$AUDIO_TYPE --task_type=$TASK_TYPE --batch_size=$BATCH_SIZE --max_epochs=$MAX_EPOCHS --lr=$LR --reduce_lr=$REDUCE_LR --model_sed=$MODEL_SED \
 --model_doa=$MODEL_DOA --fold=$FOLD --pretrained_epoch=$PRETRAINED_EPOCH --resume_epoch=$RESUME_EPOCH --data_aug=$DATA_AUG --seed=$SEED --name=$NAME --chunklen=$CHUNKLEN \
---CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
+--CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES --model_gru_size $DOA_GRU_SIZE
 

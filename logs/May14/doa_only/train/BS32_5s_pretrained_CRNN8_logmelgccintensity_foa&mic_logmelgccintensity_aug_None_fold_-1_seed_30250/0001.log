@@ -1,6 +1,0 @@
-utilities.py[line:127] INFO 2020-05-14 15:00:21.297002
-utilities.py[line:128] INFO 
-
-main.py[line:630] INFO Namespace(audio_type='foa&mic', batch_size=32, chunklen=50, cuda=True, data_aug='None', data_dir='../data/dcase20_seld_data/', feature_dir='../data/dcase20_seld_data/features/', feature_type='logmelgccintensity', fold=-1, fs=32000, hdf5='32000fs_1024nfft_3200hs_128melb', hopframes=5, hopsize=3200, loss_type='MAE', lr=0.001, max_epochs=80, mel_bins=128, mode='train', model='pretrained_CRNN8_logmelgccintensity', model_doa='pretrained_CRNN8_logmelgccintensity', model_pool_size=(2, 2), model_pool_type='avg', model_sed='CRNN9_logmelgccintensity', name='BS32_5s', nfft=1024, pretrained_epoch=40, reduce_lr=True, resume_epoch=-1, seed=30250, task_type='doa_only', weight_decay=0, workspace='/dcase2020task3/surrey20/')
-main.py[line:691] INFO 
-===> Building model
